@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: keeper
+server:
+  port: 9988
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+project:
+  server-config:
+    contextPath: /live
+    serverPort: 9966
+    httpObjectLength:
+    soBacklog: 2048
+  plugin-config:
+    enableUser: true
+    enableGroup: true
+    enableHearBeat: false
+    hearBeatCycle: 15
+    enableEventLoop: false
+    eventLoopCycle: 15
+    enableCluster: true
