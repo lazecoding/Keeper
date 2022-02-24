@@ -27,7 +27,7 @@ import java.net.URI;
  * @author lazecoding
  */
 @ChannelHandler.Sharable
-public class DefaultSessionHander extends ChannelInboundHandlerAdapter {
+public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * ?

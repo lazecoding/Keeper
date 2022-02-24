@@ -22,7 +22,7 @@ import personal.keeper.util.BeanUtil;
  * @author lazecoding
  */
 @ChannelHandler.Sharable
-public class IncomingRequestHander extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     private final ObjectMapper mapper = new ObjectMapper();
 

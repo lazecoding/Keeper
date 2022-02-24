@@ -19,8 +19,8 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import personal.keeper.config.Config;
-import personal.keeper.hander.DefaultSessionHander;
-import personal.keeper.hander.IncomingRequestHander;
+import personal.keeper.hander.DefaultSessionHandler;
+import personal.keeper.hander.IncomingRequestHandler;
 import personal.keeper.plugins.eventloop.EventLoop;
 import personal.keeper.plugins.hearbeat.DefaultHearBeatHandler;
 
@@ -83,13 +83,13 @@ public class Bootstrap {
                     }
 
                     // 会话处理器
-                    ch.pipeline().addLast(new DefaultSessionHander());
+                    ch.pipeline().addLast(new DefaultSessionHandler());
 
                     // WebSocket 握手、控制帧处理
                     ch.pipeline().addLast(new WebSocketServerProtocolHandler(Config.contextPath, null, true));
 
                     // 入站请求
-                    ch.pipeline().addLast(new IncomingRequestHander());
+                    ch.pipeline().addLast(new IncomingRequestHandler());
                 }
             });
             Channel channel = serverBootstrap.bind(Integer.parseInt(Config.serverPort)).sync().channel();
