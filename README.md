@@ -1,18 +1,71 @@
 # Keeper
 
-分布式 WebSocket 服务器
+分布式 WebSocket 服务器。
 
 ### 注意事项
 
-- 心跳检测周期要小于消息推送周期。
 - IO 线程和业务线程分离：对于小业务，依旧放到 worker 线程中处理，对于需要和中间件交互的丢到业务线程池处理，避免 worker 阻塞。
 - WebSocket 握手阶段支持参数列表。
 
-### 容器
+### 插件
 
-- CHANNEL_GROUP：链接标识 和 链接上下文对象 的映射。
+本服务功能插件化。
 
-### 组件
+#### 集群
+
+`project.plugin-config.enableCluster` 属性决定是否启用 `集群` 模块。
+
+```yaml
+project:
+  plugin-config:
+    enableCluster: true
+```
+
+> 如果启用集群模块，多个服务器将通过消息中间件同步消息，要求必须配置消息中间件。
+
+#### 用户
+
+`project.plugin-config.enableUser` 属性决定是否启用 `用户` 模块。
+
+```yaml
+project:
+  plugin-config:
+    enableUser: true
+```
+
+#### group
+
+`project.plugin-config.enableGroup` 属性决定是否启用 `群组` 模块。
+
+```yaml
+project:
+  plugin-config:
+    enableGroup: true
+```
+
+> 如果启用群组模块，则默认启用用户模块；否则以单机模式运行。
+
+#### hearbeat
+
+`project.plugin-config.enableHearBeat` 属性决定是否启用 `心跳检测` 模块，`project.plugin-config.hearBeatCycle` 控制心跳周期间隔时长，单位 s/秒。
+
+```yaml
+project:
+  plugin-config:
+    enableHearBeat: false
+    hearBeatCycle: 15
+```
+
+#### eventloop
+
+`project.plugin-config.enableEventLoop` 属性决定是否启用 `事件周期处理` 模块，`project.plugin-config.eventLoopCycle` 控制事件处理周期间隔时长，单位 s/秒。
+
+```yaml
+project:
+  plugin-config:
+    enableEventLoop: false
+    eventLoopCycle: 15
+```
 
 ### 环境配置需求
 
@@ -32,14 +85,14 @@ Linux 对每个进程打开的文件句柄数量做了限制，如果超出：�
 
 ####  堆外内存
 
-DirectByteBuffer 对象的回收需要依赖 Old GC 或者 Full GC 才能触发清理,我们需要通过 JVM 参数 
+DirectByteBuffer 对象的回收需要依赖 Old GC 或者 Full GC 才能触发清理,我们需要通过 JVM 参数
 `-XX:MaxDirectMemorySize` 指定堆外内存的上限大小，当堆外内存的大小超过该阈值时， 就会触发一次 Full GC 进行清理回收。
 
 ```java
 -XX:MaxDirectMemorySize=4G
 ```
 
-一定要配置：-Xms、-Xmx 、-XX:MaxDirectMemorySize，它们的和不能超过 docker 的最大内存，否则当 docker 内存占满了会被 oom kill。
+一定要配置：-Xms、-Xmx 、-XX:MaxDirectMemorySize，它们的和不能超过 docker 的最大内存，否则当 docker 内存占满了会被 OOM kill。
 
 #### G1
 
