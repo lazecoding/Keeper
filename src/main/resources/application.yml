@@ -9,9 +9,21 @@ server:
       enabled: true
       force: true
 
+pulsar:
+  # 多个形如 pulsar://localhost:6550,localhost:6651,localhost:6652
+  server-url: pulsar://127.0.0.1:6650
+  # 多个形如 http://localhost:8080,localhost:8081,localhost:8082
+  http-url: http://127.0.0.1:8080
+  # 租户
+  tenant:
+  # 命名空间
+  namespace:
+  # token
+  token:
+
 project:
   server-config:
-    contextPath: /live
+    contextPath: /ws
     serverPort: 9966
     httpObjectLength:
     soBacklog: 2048

@@ -1,11 +1,14 @@
 package personal.keeper.bootstarp;
 
+import org.apache.pulsar.client.admin.PulsarAdminException;
+import org.apache.pulsar.client.api.PulsarClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import personal.keeper.config.Config;
 import personal.keeper.config.PluginInfo;
 import personal.keeper.config.ServerInfo;
+import personal.keeper.plugins.mq.PulsarInit;
 import personal.keeper.util.BeanUtil;
 
 import java.util.UUID;
@@ -20,11 +23,22 @@ public class Server {
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void start() {
-        // init config
-        initCongig();
+        // init
+        init();
 
         // doStart
         Bootstrap.doStart();
+    }
+
+    public static void init() {
+        // init config
+        initCongig();
+
+        // init message queue
+        if (Config.enableCluster) {
+           initMessageQueue();
+        }
+
     }
 
     /**
@@ -68,6 +82,19 @@ public class Server {
 
         // 打印
         logger.info(Config.getString());
+    }
+
+    /**
+     * if Config.enableCluster is true，init message queue。
+     */
+    public static boolean initMessageQueue() {
+        try {
+            PulsarInit.init();
+        } catch (PulsarClientException | PulsarAdminException e) {
+            logger.error("init message queue error", e);
+            return false;
+        }
+        return true;
     }
 
 }
