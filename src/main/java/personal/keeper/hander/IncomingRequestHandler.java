@@ -24,7 +24,7 @@ import personal.keeper.util.BeanUtil;
 @ChannelHandler.Sharable
 public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * PING 请求消息内容
@@ -54,7 +54,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
         }
 
         try {
-            requestModel = mapper.readValue(requestContext, RequestModel.class);
+            requestModel = MAPPER.readValue(requestContext, RequestModel.class);
             incomingRequest(ctx, requestModel);
         } catch (JsonProcessingException e) {
             errorRequest(ctx, "IncomingRequestHander JsonProcessingException");
@@ -71,7 +71,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
         String type = requestModel.getType();
         if (!RequestType.contain(type)) {
             ResponseModel responseModel = new ResponseModel(ResponseType.EXCEPTION.getCode(), "不合法的请求类型");
-            String responseContent = mapper.writeValueAsString(responseModel);
+            String responseContent = MAPPER.writeValueAsString(responseModel);
             MessageSender.sendLocalMessage(ctx, responseContent);
             return;
         }
@@ -79,7 +79,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
         if (type.equals(RequestType.MONITOR.getCode())) {
             // M
             ResponseModel responseModel = new ResponseModel(ResponseType.MONITOR.getCode(), GroupContainer.CHANNEL_CONTEXT.size() + "");
-            String responseContent = mapper.writeValueAsString(responseModel);
+            String responseContent = MAPPER.writeValueAsString(responseModel);
             MessageSender.sendLocalMessage(ctx, responseContent);
             return;
         }
@@ -94,7 +94,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
      */
     private void errorRequest(ChannelHandlerContext ctx, String error) throws JsonProcessingException {
         ResponseModel responseModel = new ResponseModel(ResponseType.EXCEPTION.getCode(), error);
-        String responseContent = mapper.writeValueAsString(responseModel);
+        String responseContent = MAPPER.writeValueAsString(responseModel);
         MessageSender.sendLocalMessage(ctx, responseContent);
     }
 

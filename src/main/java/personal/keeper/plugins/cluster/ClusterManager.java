@@ -1,11 +1,21 @@
 package personal.keeper.plugins.cluster;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.pulsar.client.api.MessageId;
+import org.apache.pulsar.client.api.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import personal.keeper.component.MessageSender;
 import personal.keeper.config.Config;
 import personal.keeper.constant.DigitalConstant;
+import personal.keeper.plugins.mq.MqConstant;
+import personal.keeper.plugins.mq.PulsarInit;
+import personal.keeper.plugins.mq.PulsarProducer;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Cluster Manager
@@ -14,11 +24,25 @@ import java.util.List;
  */
 public class ClusterManager {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private final static Logger logger = LoggerFactory.getLogger(ClusterManager.class);
+
     /**
      * 广播消息到多个服务实例
      */
     public static void sendClusterMessage(ClusterMessageModel clusterMessageModel) {
-        // TODO 通过 MQ 广播消息到多个服务实例
+        Producer<byte[]> producer = PulsarProducer.getInstance(MqConstant.MESSAGE_SYNC.getTopicName());
+        try {
+            String clusterMessage = MAPPER.writeValueAsString(clusterMessageModel);
+            producer.newMessage()
+                    .key("cluster-message")
+                    .value(clusterMessage.getBytes())
+                    .sendAsync();
+            logger.info("send cluster-message:" + clusterMessageModel.getMessage());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
     }
 

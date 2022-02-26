@@ -19,7 +19,7 @@ import personal.keeper.util.BeanUtil;
 @Component
 public class DispatchRequestAdapter {
 
-    private final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 请求调度
