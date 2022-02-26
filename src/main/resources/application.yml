@@ -11,9 +11,9 @@ server:
 
 pulsar:
   # 多个形如 pulsar://localhost:6550,localhost:6651,localhost:6652
-  server-url: pulsar://127.0.0.1:6650
+  server-url: pulsar://192.168.83.22:6650
   # 多个形如 http://localhost:8080,localhost:8081,localhost:8082
-  http-url: http://127.0.0.1:8080
+  http-url: http://192.168.83.22:8080
   # 租户
   tenant:
   # 命名空间

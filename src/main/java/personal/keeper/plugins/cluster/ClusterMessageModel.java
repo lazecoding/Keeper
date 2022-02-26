@@ -2,6 +2,9 @@ package personal.keeper.plugins.cluster;
 
 import personal.keeper.constant.DigitalConstant;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Cluster Message Model
  *
@@ -10,19 +13,14 @@ import personal.keeper.constant.DigitalConstant;
 public class ClusterMessageModel {
 
     /**
-     * 消息类型：1：发送给 User;2：发送给 Group；3：广播
+     * 消息类型：1：发送给 User;2：广播
      */
     private int type;
 
     /**
-     * 用户 Id
+     * 用户 Id 列表
      */
-    private String userId;
-
-    /**
-     * 群组 Id
-     */
-    private String groupId;
+    private List<String> userIds;
 
     /**
      * 消息内容
@@ -32,37 +30,24 @@ public class ClusterMessageModel {
     public ClusterMessageModel() {
     }
 
-    public static ClusterMessageModel getBroadcastInstance(int type, String message) {
-        ClusterMessageModel model = new ClusterMessageModel();
-        model.type = type;
-        model.message = message;
-        return model;
+    public static ClusterMessageModel getUserInstance(String userId, String message) {
+        return getUserInstance(Collections.singletonList(userId), message);
     }
 
-    public static ClusterMessageModel getUserInstance(String userId, String message) {
+    public static ClusterMessageModel getUserInstance(List<String> userIds, String message) {
         ClusterMessageModel model = new ClusterMessageModel();
         model.type = DigitalConstant.ONE;
-        model.userId = userId;
-        model.message = message;
-        return model;
-    }
-
-
-    public static ClusterMessageModel getGroupInstance(String groupId, String message) {
-        ClusterMessageModel model = new ClusterMessageModel();
-        model.type = DigitalConstant.TWO;
-        model.groupId = groupId;
+        model.userIds = userIds;
         model.message = message;
         return model;
     }
 
     public static ClusterMessageModel getBroadcastInstance(String message) {
         ClusterMessageModel model = new ClusterMessageModel();
-        model.type = DigitalConstant.THREE;
+        model.type = DigitalConstant.TWO;
         model.message = message;
         return model;
     }
-
 
     public int getType() {
         return type;
@@ -72,20 +57,12 @@ public class ClusterMessageModel {
         this.type = type;
     }
 
-    public String getUserId() {
-        return userId;
+    public List<String> getUserIds() {
+        return userIds;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
     }
 
     public String getMessage() {

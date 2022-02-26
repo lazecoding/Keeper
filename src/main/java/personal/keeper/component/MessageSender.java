@@ -63,6 +63,18 @@ public class MessageSender {
     }
 
     /**
+     * 发送信息给本地用户
+     */
+    public static void sendLocalMessageToUser(List<String> userIds, String message) {
+        if (!Config.enableUser || CollectionUtils.isEmpty(userIds)) {
+            return;
+        }
+        for (String userId : userIds) {
+            sendLocalMessageToUser(userId, message);
+        }
+    }
+
+    /**
      * 发送信息给本地群组
      */
     public static void sendLocalMessageToGroup(String groupId, String message) {
@@ -73,9 +85,7 @@ public class MessageSender {
         if (CollectionUtils.isEmpty(userIds)) {
             return;
         }
-        for (String userId : userIds) {
-            sendLocalMessageToUser(userId, message);
-        }
+        sendLocalMessageToUser(userIds, message);
     }
 
     /**
@@ -100,6 +110,9 @@ public class MessageSender {
      * 发送信息给集群用户
      */
     public static void sendMessageToUser(String userId, String message) {
+        if (!Config.enableUser) {
+            return;
+        }
         if (!Config.enableCluster) {
             sendLocalMessageToUser(userId, message);
             return;
@@ -108,14 +121,37 @@ public class MessageSender {
     }
 
     /**
-     * 发送信息给集群群组
+     * 发送信息给集群用户
      */
-    public static void sendMessageToGroup(String groupId, String message) {
-        if (!Config.enableCluster) {
-            sendLocalMessageToGroup(groupId, message);
+    public static void sendMessageToUser(List<String> userIds, String message) {
+        if (!Config.enableUser || CollectionUtils.isEmpty(userIds)) {
             return;
         }
-        ClusterManager.sendClusterMessage(ClusterMessageModel.getGroupInstance(groupId, message));
+        if (!Config.enableCluster) {
+            sendLocalMessageToUser(userIds, message);
+            return;
+        }
+        ClusterManager.sendClusterMessage(ClusterMessageModel.getUserInstance(userIds, message));
+    }
+
+    /**
+     * 发送信息给集群群组（转化为发给多个用户）
+     */
+    public static void sendMessageToGroup(String groupId, String message) {
+        if (!Config.enableGroup || StringUtils.isEmpty(groupId)) {
+            return;
+        }
+        List<String> userIds = GroupManager.findUserIdInGroup(groupId);
+        if (CollectionUtils.isEmpty(userIds)) {
+            return;
+        }
+        if (!Config.enableCluster) {
+            // 发给本地用户
+            sendLocalMessageToUser(userIds, message);
+            return;
+        }
+        // 发给集群用户
+        ClusterManager.sendClusterMessage(ClusterMessageModel.getUserInstance(userIds, message));
     }
 
     /**

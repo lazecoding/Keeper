@@ -1,8 +1,11 @@
 package personal.keeper.plugins.cluster;
 
+import org.springframework.util.CollectionUtils;
 import personal.keeper.component.MessageSender;
 import personal.keeper.config.Config;
 import personal.keeper.constant.DigitalConstant;
+
+import java.util.List;
 
 /**
  * Cluster Manager
@@ -30,17 +33,16 @@ public class ClusterManager {
         }
         if (clusterMessageModel.getType() == DigitalConstant.ONE) {
             // User
-            MessageSender.sendLocalMessageToGroup(clusterMessageModel.getUserId(), clusterMessageModel.getMessage());
+            List<String> userIds;
+            if (CollectionUtils.isEmpty(userIds = clusterMessageModel.getUserIds())) {
+                return;
+            }
+            MessageSender.sendLocalMessageToUser(userIds, clusterMessageModel.getMessage());
         }
         if (clusterMessageModel.getType() == DigitalConstant.TWO) {
-            // Group
-            MessageSender.sendLocalMessageToGroup(clusterMessageModel.getGroupId(), clusterMessageModel.getMessage());
-        }
-        if (clusterMessageModel.getType() == DigitalConstant.THREE) {
             // Broadcast
             MessageSender.sendLocalMessageForBroadcast(clusterMessageModel.getMessage());
         }
     }
-
 
 }
