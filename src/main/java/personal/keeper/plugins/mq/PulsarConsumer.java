@@ -47,7 +47,7 @@ public class PulsarConsumer {
                 .messageListener((consumer, message) -> {
                     // 消息转发到业务线程池处理，增加 MQ 吞吐量
                     String messageData = new String(message.getData());
-                    logger.debug("cost message:" + messageData);
+                    logger.debug("message-sync-consumer topic:{} subscription:{} message.data:{}:", topicName, subscriptionName, messageData);
                     AsynTaskExecutor.submitTask(() -> {
                         try {
                             ClusterMessageModel clusterMessageModel = MAPPER.readValue(messageData, ClusterMessageModel.class);
@@ -65,7 +65,6 @@ public class PulsarConsumer {
         // 1.每台机器维护本机订阅入 Redis，并初始化生命周期。
         // 2.周期为 Redis 更新生命周期。
         // 3.启动线程定期扫描改主题的订阅，如果不在 Redis 中则清除。
-
         RedisTemplate redisTemplate = BeanUtil.getBean("redisTemplate", RedisTemplate.class);
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
             Thread thread = new Thread(runnable);
@@ -73,41 +72,34 @@ public class PulsarConsumer {
             thread.setDaemon(true);
             return thread;
         });
-        String finalSubscriptionName = subscriptionName;
         // 1.init local subscription
-        redisTemplate.opsForValue().setIfAbsent("message-sync:" + finalSubscriptionName, "Message Sync", DigitalConstant.TWENTY, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().setIfAbsent("message-sync:" + subscriptionName, "Message Sync", DigitalConstant.TWENTY, TimeUnit.SECONDS);
         logger.info("init local subscription ready.");
         // 2.reset local subscription task - 20s ttl, 15s 周期。
-        scheduledExecutor.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                boolean expire = redisTemplate.expire("message-sync:" + finalSubscriptionName, DigitalConstant.TWENTY, TimeUnit.SECONDS);
-                logger.info("expire topic:{} subscription:{} ttl:{} isSuccess:{}", topicName, subscriptionName, DigitalConstant.TWENTY, expire);
-            }
+        scheduledExecutor.scheduleWithFixedDelay(() -> {
+            boolean expire = redisTemplate.expire("message-sync:" + subscriptionName, DigitalConstant.TWENTY, TimeUnit.SECONDS);
+            logger.info("expire topic:{} subscription:{} ttl:{} isSuccess:{}", topicName, subscriptionName, DigitalConstant.TWENTY, expire);
         }, DigitalConstant.FIFTEEN, DigitalConstant.FIFTEEN, TimeUnit.SECONDS);
         logger.info("reset local subscription task ready.");
 
         // 3. compare and clean
-        scheduledExecutor.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                // init local subscription - 5 min
-                try {
-                    List<String> subscriptions = PulsarManager.pulsarAdmin.topics().getSubscriptions(topicName);
-                    if (CollectionUtils.isEmpty(subscriptions)) {
-                        return;
-                    }
-                    for (String subscription : subscriptions) {
-                        boolean hasKey = redisTemplate.hasKey("message-sync:" + subscription);
-                        if (!hasKey) {
-                            // remove this subscription
-                            PulsarManager.pulsarAdmin.topics().deleteSubscription(topicName, subscription);
-                            logger.info("remove topic:{} subscription:{}", topicName, subscription);
-                        }
-                    }
-                } catch (PulsarAdminException e) {
-                    logger.error("clean nil subscription in topic error.", e);
+        scheduledExecutor.scheduleWithFixedDelay(() -> {
+            // init local subscription - 5 min
+            try {
+                List<String> subscriptions = PulsarManager.pulsarAdmin.topics().getSubscriptions(topicName);
+                if (CollectionUtils.isEmpty(subscriptions)) {
+                    return;
                 }
+                for (String subscription : subscriptions) {
+                    boolean hasKey = redisTemplate.hasKey("message-sync:" + subscription);
+                    if (!hasKey) {
+                        // remove this subscription
+                        PulsarManager.pulsarAdmin.topics().deleteSubscription(topicName, subscription);
+                        logger.info("remove topic:{} subscription:{}", topicName, subscription);
+                    }
+                }
+            } catch (PulsarAdminException e) {
+                logger.error("clean nil subscription in topic error.", e);
             }
         }, DigitalConstant.FIVE, DigitalConstant.FIVE, TimeUnit.MINUTES);
         logger.info("compare and clean nil subscription task ready.");
