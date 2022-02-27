@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import personal.keeper.config.Config;
 import personal.keeper.config.PluginInfo;
 import personal.keeper.config.ServerInfo;
+import personal.keeper.plugins.mq.PulsarConfig;
 import personal.keeper.plugins.mq.PulsarInit;
 import personal.keeper.util.BeanUtil;
 
@@ -36,7 +37,7 @@ public class Server {
 
         // init message queue
         if (Config.enableCluster) {
-           initMessageQueue();
+            initMessageQueue();
         }
 
     }
@@ -81,7 +82,7 @@ public class Server {
         Config.uid = UUID.randomUUID().toString().replaceAll("-", "");
 
         // 打印
-        logger.info(Config.getString());
+        logger.info("init server config ready.\n{}", Config.getString());
     }
 
     /**

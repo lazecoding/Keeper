@@ -32,18 +32,15 @@ public class PulsarInit {
     public static void init() throws PulsarClientException, PulsarAdminException {
         // 1.init config
         initConfig();
-        logger.info("init PulsarConfig end.");
 
         // 2.init PulsarManager
         PulsarManager.init();
 
         // 3.init PulsarClient
         initClient();
-        logger.info("init PulsarClient end.");
 
         // 4.init PulsarConsumer
         initConsumer();
-        logger.info("init all PulsarConsumer end.");
     }
 
     /**
@@ -66,6 +63,7 @@ public class PulsarInit {
             PulsarConfig.namespace = "default";
         }
         PulsarConfig.token = environment.getProperty("pulsar.token");
+        logger.info("init PulsarConfig ready. \n{}", PulsarConfig.getString());
     }
 
     /**
@@ -78,6 +76,7 @@ public class PulsarInit {
                 .serviceUrl(PulsarConfig.pulsarUrl)
                 .authentication(StringUtils.isEmpty(PulsarConfig.token) ? null : AuthenticationFactory.token(PulsarConfig.token))
                 .build();
+        logger.info("init PulsarClient ready.");
     }
 
     /**
@@ -89,7 +88,7 @@ public class PulsarInit {
 
         // Init Message Sync Consumer
         PulsarConsumer.initMessageSyncConsumer();
-        logger.info("init Message Sync Consumer end.");
 
+        logger.info("init all PulsarConsumer ready.");
     }
 }

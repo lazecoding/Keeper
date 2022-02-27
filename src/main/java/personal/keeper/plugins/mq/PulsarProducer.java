@@ -37,6 +37,7 @@ public class PulsarProducer {
                 .blockIfQueueFull(true)
                 .create();
         producers.put(topicName, producer);
+        logger.info("init producer for topic:{} ready.", topicName);
     }
 
     /**

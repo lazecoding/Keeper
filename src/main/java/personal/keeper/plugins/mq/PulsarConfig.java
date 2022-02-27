@@ -32,6 +32,13 @@ public class PulsarConfig {
      */
     public static String token;
 
-
-
+    public static String getString() {
+        return "PulsarConfig {\n" +
+                "  pulsarUrl='" + pulsarUrl + "'" +
+                ",httpUrl='" + httpUrl + "'" +
+                ",tenant='" + tenant + "'" +
+                ",namespace='" + namespace + "'" +
+                ",token='" + token + "'" +
+                "\n}";
+    }
 }

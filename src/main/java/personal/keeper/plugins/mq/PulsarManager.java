@@ -33,32 +33,6 @@ public class PulsarManager {
                 .serviceHttpUrl(PulsarConfig.httpUrl)
                 .authentication(StringUtils.isEmpty(PulsarConfig.token) ? null : AuthenticationFactory.token(PulsarConfig.token))
                 .build();
-    }
-
-    /**
-     * TODO 清除没有消费者的可变订阅
-     * <p>
-     * 每个服务维护本地订阅并注册到 Redis，设置生命周期并续约。
-     * 另一方面，一个专门的线程用于对比主题下订阅和 Redis 中注册的订阅差集，并清理。
-     *
-     * @throws PulsarAdminException
-     */
-    public static void cleanNilSubscriptions() throws PulsarAdminException {
-
-        // pulsarAdmin.topics().getList("")
-
-        /*String topic = "persistent://my-tenant/my-namespace/my-topic";
-        String subscriptionName = "my-subscription";
-        pulsarAdmin.topics().deleteSubscription(topic, subscriptionName);*/
-
-        List<String> subscriptions = pulsarAdmin.topics().getSubscriptions(MqConstant.MESSAGE_SYNC.getTopicName());
-        logger.info("PulsarManager subscriptions:" + subscriptions.toString());
-
-        List<String> topics = pulsarAdmin.topics().getList(PulsarConfig.tenant + "/" + PulsarConfig.namespace);
-        logger.info("PulsarManager topics:" + topics.toString());
-
-        List<String> namespaces = pulsarAdmin.namespaces().getNamespaces(PulsarConfig.tenant);
-        logger.info("PulsarManager namespaces:" + namespaces.toString());
-
+        logger.info("init PulsarAdmin ready.");
     }
 }

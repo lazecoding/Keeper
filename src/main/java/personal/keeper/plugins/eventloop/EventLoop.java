@@ -41,7 +41,7 @@ public class EventLoop {
 
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
             Thread thread = new Thread(runnable);
-            thread.setName("event-loop-executor");
+            thread.setName("executor-event-loop");
             thread.setDaemon(true);
             return thread;
         });

@@ -62,4 +62,9 @@ public class DigitalConstant {
      */
     public static final int FIFTEEN = 15;
 
+    /**
+     * 20
+     */
+    public static final int TWENTY = 20;
+
 }

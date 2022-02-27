@@ -62,6 +62,17 @@
             <version>2.9.1</version>
         </dependency>
 
+        <!-- 配置 Redis 启动器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!--Jackson包-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

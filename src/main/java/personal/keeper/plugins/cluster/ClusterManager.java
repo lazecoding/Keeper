@@ -39,7 +39,7 @@ public class ClusterManager {
                     .key("cluster-message")
                     .value(clusterMessage.getBytes())
                     .sendAsync();
-            logger.info("send cluster-message:" + clusterMessageModel.getMessage());
+            logger.debug("send cluster-message:{}", clusterMessageModel.getMessage());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

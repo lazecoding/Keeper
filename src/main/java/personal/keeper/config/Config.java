@@ -74,23 +74,22 @@ public class Config {
     public static boolean enableCluster = Boolean.FALSE;
 
     public static String getString() {
-        return "ServerConfig Info >>> \n{\n" +
-                "  uid=" + uid +
+        return "ServerConfig {\n" +
+                "  uid='" + uid + "'" +
                 "\n" +
-                "  contextPath=" + contextPath +
-                ", serverPort=" + serverPort +
-                ", httpObjectLength=" + httpObjectLength +
-                ", soBacklog=" + soBacklog +
+                "  contextPath='" + contextPath + "'" +
+                ", serverPort='" + serverPort + "'" +
+                ", httpObjectLength='" + httpObjectLength + "'" +
+                ", soBacklog='" + soBacklog + "'" +
                 "\n" +
-                "  enableUser=" + enableUser +
-                ", enableGroup=" + enableGroup +
-                ", enableHearBeat=" + enableHearBeat +
-                ", hearBeatCycle=" + hearBeatCycle +
-                ", enableEventLoop=" + enableEventLoop +
-                ", eventLoopCycle=" + eventLoopCycle +
-                ", enableCluster=" + enableCluster +
+                "  enableUser='" + enableUser + "'" +
+                ", enableGroup='" + enableGroup + "'" +
+                ", enableHearBeat='" + enableHearBeat + "'" +
+                ", hearBeatCycle='" + hearBeatCycle + "'" +
+                ", enableEventLoop='" + enableEventLoop + "'" +
+                ", eventLoopCycle='" + eventLoopCycle + "'" +
+                ", enableCluster='" + enableCluster + "'" +
                 "\n}";
     }
-
 
 }

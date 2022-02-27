@@ -1,10 +1,15 @@
 package personal.keeper.plugins.mq;
 
 import org.apache.pulsar.client.admin.PulsarAdminException;
- import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import personal.keeper.component.MessageSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 测试
@@ -15,18 +20,38 @@ import personal.keeper.component.MessageSender;
 @Controller
 public class PulsarNet {
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
-     * http://localhost:9988/mq/cleanNilSubscriptions
+     * http://localhost:9988/mq/redisTemplate
      *
      * @return
      */
-    @RequestMapping(value = "/cleanNilSubscriptions")
+    @RequestMapping(value = "/redisTemplate")
     @ResponseBody
     public String cleanNilSubscriptions() throws PulsarAdminException {
 
-        PulsarManager.cleanNilSubscriptions();
+        redisTemplate.opsForValue().set("key:1", "value:1:我");
+        redisTemplate.opsForValue().set("key:2", "value:1:是");
+        redisTemplate.opsForValue().set("key:三", "value:1:猪");
 
-        return "cleanNilSubscriptions";
+        List<String> list = new ArrayList<>();
+        list.add("key:1");
+        list.add("key:2");
+        list.add("key:三");
+
+        List<String> values = redisTemplate.opsForValue().multiGet(list);
+
+        System.out.println(values);
+
+        redisTemplate.delete(list);
+
+        values = redisTemplate.opsForValue().multiGet(list);
+
+        System.out.println(values);
+
+        return "redisTemplate";
     }
 
     /**

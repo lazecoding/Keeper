@@ -25,10 +25,10 @@ public class AsynTaskExecutor {
     /**
      * 异步任务执行器
      */
-    private static final ThreadPoolExecutor ASYN_EXECUTOR = new ThreadPoolExecutor(CORE_NUM, CORE_NUM * 2, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+    private static final ThreadPoolExecutor ASYNC_EXECUTOR = new ThreadPoolExecutor(CORE_NUM, CORE_NUM * 2, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
             runnable -> {
                 Thread thread = new Thread(runnable);
-                thread.setName("asyn-task-executor");
+                thread.setName("executor-async-task");
                 thread.setDaemon(true);
                 return thread;
             }, new ThreadPoolExecutor.AbortPolicy());
@@ -37,7 +37,7 @@ public class AsynTaskExecutor {
      * 提交任务
      **/
     public static void submitTask(Runnable task) {
-        ASYN_EXECUTOR.execute(task);
+        ASYNC_EXECUTOR.execute(task);
     }
 
 }

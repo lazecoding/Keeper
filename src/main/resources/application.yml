@@ -1,6 +1,18 @@
 spring:
   application:
     name: keeper
+  redis:
+    host: 192.168.83.22
+    port: 6379
+    password:
+    database: 11
+    lettuce:
+      pool:
+        max-active: 16
+        max-wait: 3000ms
+        max-idle: 16
+        min-idle: 0
+
 server:
   port: 9988
   http:

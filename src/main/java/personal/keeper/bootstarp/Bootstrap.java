@@ -93,7 +93,7 @@ public class Bootstrap {
                 }
             });
             Channel channel = serverBootstrap.bind(Integer.parseInt(Config.serverPort)).sync().channel();
-            logger.info("Connection is opened ... port:" + Config.serverPort + " contextPath:" + Config.contextPath);
+            logger.info("Connection is opened ... port:{}  contextPath:{}", Config.serverPort, Config.contextPath);
 
             // 注册周期事件处理器
             if (Config.enableEventLoop) {
@@ -102,9 +102,9 @@ public class Bootstrap {
 
             // Wait until the connection is closed.
             channel.closeFuture().sync();
-            logger.info("Connection is closed");
+            logger.info("Connection is closed.");
         } catch (InterruptedException e) {
-            logger.error("Exception:" + e.getMessage() + " > " + e.getClass().getName());
+            logger.error("Bootstrap doStart Exception:{}.", e.getMessage());
             throw new Error("Server Disconnected");
         } finally {
             // 服务器关闭后，释放资源
@@ -115,6 +115,5 @@ public class Bootstrap {
             }
         }
     }
-
 
 }
