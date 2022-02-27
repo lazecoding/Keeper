@@ -16,7 +16,6 @@ public class KeeperApplication {
 
         SpringApplication.run(KeeperApplication.class, args);
 
-        Server.start();
     }
 
 }

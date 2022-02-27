@@ -31,7 +31,7 @@ public class Server {
         Bootstrap.doStart();
     }
 
-    public static void init() {
+    private static void init() {
         // init config
         initCongig();
 
@@ -45,7 +45,7 @@ public class Server {
     /**
      * init config
      */
-    public static void initCongig() {
+    private static void initCongig() {
         // 初始化 server-config
         ServerInfo serverInfo = BeanUtil.getBean("serverInfo", ServerInfo.class);
         if (serverInfo != null) {
@@ -88,7 +88,7 @@ public class Server {
     /**
      * if Config.enableCluster is true，init message queue。
      */
-    public static boolean initMessageQueue() {
+    private static boolean initMessageQueue() {
         try {
             PulsarInit.init();
         } catch (PulsarClientException | PulsarAdminException e) {
