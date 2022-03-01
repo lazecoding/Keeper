@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.*;
 import org.springframework.core.Ordered;
 import personal.keeper.bootstarp.Server;
+import personal.keeper.component.AsynTaskExecutor;
 import personal.keeper.util.BeanUtil;
 
 import javax.servlet.ServletContextEvent;
@@ -65,7 +66,8 @@ public class KeeperContextListener implements ServletContextListener, ServletReq
                 logger.debug("ApplicationContextEvent - ContextRefreshedEvent...");
                 // 容器初始化完毕
                 // 执行系统生命周期行为:系统初始化
-                Server.start();
+                // 异步启动 WebSocket Server
+                AsynTaskExecutor.submitTask(Server::start);
             } else if (applicationEvent instanceof ContextStartedEvent) {
                 // spring上下文启动完成触发,既ConfigurableApplicationContext的start方法。奇怪的是spring自己启动完成后触发的不是这个事件，而是上面的RefreshedEvent。
                 logger.debug("ApplicationContextEvent - ContextStartedEvent...");
