@@ -41,7 +41,7 @@ public class PulsarConsumer {
                 .messageListener((consumer, message) -> {
                     // 消息转发到业务线程池处理，增加 MQ 吞吐量
                     String messageData = new String(message.getData());
-                    logger.debug("message-sync-consumer topic:{} subscription:{} message.data:{}:", topicName, localSubscriptionName, messageData);
+                    logger.debug("message-sync-consumer topic:{} subscription:{} message.data:{}", topicName, localSubscriptionName, messageData);
                     AsynTaskExecutor.submitTask(() -> {
                         try {
                             ClusterMessageModel clusterMessageModel = MAPPER.readValue(messageData, ClusterMessageModel.class);

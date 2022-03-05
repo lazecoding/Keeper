@@ -39,7 +39,7 @@ public class ClusterManager {
                     .key("cluster-message")
                     .value(clusterMessage.getBytes())
                     .sendAsync();
-            logger.debug("message-sync-producer topic:{}  message.data:{}:", MqConstant.MESSAGE_SYNC.getTopicName(), clusterMessageModel.getMessage());
+            logger.debug("message-sync-producer topic:{}  message.data:{}", MqConstant.MESSAGE_SYNC.getTopicName(), clusterMessageModel.getMessage());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

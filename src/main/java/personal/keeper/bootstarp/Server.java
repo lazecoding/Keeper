@@ -92,7 +92,7 @@ public class Server {
         try {
             PulsarInit.init();
         } catch (PulsarClientException | PulsarAdminException e) {
-            logger.error("init message queue error", e);
+            logger.error("init message queue error", e.getCause().toString());
             return false;
         }
         return true;

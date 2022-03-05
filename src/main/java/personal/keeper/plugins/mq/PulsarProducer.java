@@ -52,7 +52,7 @@ public class PulsarProducer {
                 }
                 producer = producers.get(topicName);
             } catch (PulsarClientException e) {
-                logger.error("init PulsarProducer error", e);
+                logger.error("init PulsarProducer error", e.getCause().toString());
                 return null;
             }
         }
