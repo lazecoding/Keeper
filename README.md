@@ -2,10 +2,18 @@
 
 分布式 WebSocket 服务器。
 
-### 注意事项
+### 架构
 
-- IO 线程和业务线程分离：对于小业务，依旧放到 worker 线程中处理，对于需要和中间件交互的丢到业务线程池处理，避免 worker 阻塞。
-- WebSocket 握手阶段支持参数列表。
+本项目基于 Netty 开发，继承 Netty 架构并进一步扩展。
+
+<div align="left">
+    <img src="https://github.com/lazecoding/Keeper/tree/main/src/main/resources/static/image/Keeper.png" width="600px">
+</div>
+
+特点：
+
+- Boss 线程、IO 线程、业务线程分离。
+- 通过 MQ 广播。
 
 ### 插件
 
@@ -33,7 +41,7 @@ project:
     enableUser: true
 ```
 
-#### group
+#### 群组
 
 `project.plugin-config.enableGroup` 属性决定是否启用 `群组` 模块。
 
@@ -45,7 +53,7 @@ project:
 
 > 如果启用群组模块，则默认启用用户模块；否则以单机模式运行。
 
-#### hearbeat
+#### 心跳检测
 
 `project.plugin-config.enableHearBeat` 属性决定是否启用 `心跳检测` 模块，`project.plugin-config.hearBeatCycle` 控制心跳周期间隔时长，单位 s/秒。
 
@@ -56,7 +64,7 @@ project:
     hearBeatCycle: 15
 ```
 
-#### eventloop
+#### 事件周期处理
 
 `project.plugin-config.enableEventLoop` 属性决定是否启用 `事件周期处理` 模块，`project.plugin-config.eventLoopCycle` 控制事件处理周期间隔时长，单位 s/秒。
 
