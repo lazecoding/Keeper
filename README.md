@@ -7,7 +7,7 @@
 本项目基于 Netty 开发，继承 Netty 架构并进一步扩展。
 
 <div align="left">
-    <img src="https://github.com/lazecoding/Keeper/tree/main/src/main/resources/static/image/Keeper.png" width="600px">
+    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper.png" width="800px">
 </div>
 
 特点：
