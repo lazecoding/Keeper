@@ -161,3 +161,8 @@ http {
 
 `proxy_read_timeout` 这个参数是服务器对你等待最大的时间，也就是说当你 WebSocket 使用 Nginx 转发的时候，`proxy_read_timeout` 时间内没有通讯，
 依然是会断开的，设置时间内有心跳或者有通信的话，是可以保持连接不中断的。
+
+
+## License
+
+Keeper software is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/lazecoding/Keeper/blob/main/LICENSE) file for details.
