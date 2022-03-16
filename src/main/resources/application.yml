@@ -1,6 +1,6 @@
 spring:
   application:
-    name: keeper
+    name: Keeper
   redis:
     host: 192.168.83.22
     port: 6379
@@ -35,15 +35,26 @@ pulsar:
 
 project:
   server-config:
+    # WebSocket Path
     contextPath: /ws
+    # 服务绑定的端口号
     serverPort: 9966
+    # HttpObjectAggregator MaxContentLength
     httpObjectLength:
+    # TCP 全队列大小
     soBacklog: 2048
   plugin-config:
+    # 开启用户
     enableUser: true
+    # 开启群组模块，默认开启用户
     enableGroup: true
+    # 开启心跳
     enableHearBeat: false
+    # 设置心跳周期，单位 S
     hearBeatCycle: 15
+    # 开启事件循环
     enableEventLoop: false
+    # 设置事件循环周期，单位 S
     eventLoopCycle: 15
+    # 开启集群
     enableCluster: true
