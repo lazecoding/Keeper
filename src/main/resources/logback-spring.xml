@@ -133,7 +133,7 @@
         <appender-ref ref="error-log"/>
     </root>
 
-    <!-- personal.unique 包下 DEBUG -->
-    <logger name="personal.keeper" level="DEBUG" />
+    <!-- lazecoding.keeper 包下 DEBUG -->
+    <logger name="lazecoding.keeper" level="DEBUG" />
 
 </configuration>

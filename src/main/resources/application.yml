@@ -57,4 +57,4 @@ project:
     # 设置事件循环周期，单位 S
     eventLoopCycle: 15
     # 开启集群
-    enableCluster: true
+    enableCluster: false
