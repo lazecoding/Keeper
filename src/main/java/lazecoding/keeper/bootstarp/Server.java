@@ -1,5 +1,6 @@
 package lazecoding.keeper.bootstarp;
 
+import lazecoding.keeper.constant.DigitalConstant;
 import org.apache.pulsar.client.admin.PulsarAdminException;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import lazecoding.keeper.plugins.mq.PulsarInit;
 import lazecoding.keeper.util.BeanUtil;
 
 import java.util.UUID;
+import java.util.concurrent.*;
 
 /**
  * Server 入口
@@ -27,7 +29,7 @@ public class Server {
         init();
 
         // doStart
-        Bootstrap.doStart();
+        Executors.newSingleThreadExecutor().submit(Bootstrap::doStart);
     }
 
     private static void init() {

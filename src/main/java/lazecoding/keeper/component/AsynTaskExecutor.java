@@ -1,5 +1,8 @@
 package lazecoding.keeper.component;
 
+import io.netty.util.NettyRuntime;
+import lazecoding.keeper.constant.DigitalConstant;
+
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +16,7 @@ public class AsynTaskExecutor {
     /**
      * CPU 核心数量
      */
-    private static final int CORE_NUM = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_NUM = Math.max(DigitalConstant.FOUR, NettyRuntime.availableProcessors());
 
     /**
      * 私有，禁止实例化
@@ -25,7 +28,7 @@ public class AsynTaskExecutor {
     /**
      * 异步任务执行器
      */
-    private static final ThreadPoolExecutor ASYNC_EXECUTOR = new ThreadPoolExecutor(CORE_NUM, CORE_NUM * 2, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+    private static final ThreadPoolExecutor ASYNC_EXECUTOR = new ThreadPoolExecutor(CORE_NUM, CORE_NUM * DigitalConstant.TWO, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
             runnable -> {
                 Thread thread = new Thread(runnable);
                 thread.setName("executor-async-task");
