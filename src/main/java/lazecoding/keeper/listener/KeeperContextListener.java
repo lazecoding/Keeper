@@ -8,44 +8,16 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.*;
 import org.springframework.core.Ordered;
 import lazecoding.keeper.bootstarp.Server;
-import lazecoding.keeper.component.AsynTaskExecutor;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.annotation.WebListener;
 
 /**
  * KeeperContextListener
  *
  * @author lazecoding
  */
-@WebListener
-public class KeeperContextListener implements ServletContextListener, ServletRequestListener, ApplicationListener<ApplicationEvent>, Ordered {
+public class KeeperContextListener implements ApplicationListener<ApplicationEvent>, Ordered {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public KeeperContextListener() {
-    }
-
-    @Override
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
-        logger.debug("BaseListener starting...");
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.debug("BaseListener ending...");
-    }
-
-    @Override
-    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        logger.debug("BaseListener RequestEvent starting...");
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-        logger.debug("BaseListener RequestEvent ending...");
     }
 
     @Override
