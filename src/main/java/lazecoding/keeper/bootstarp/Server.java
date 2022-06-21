@@ -34,7 +34,7 @@ public class Server {
 
     private static void init() {
         // init config
-        initCongig();
+        initConfig();
 
         // init message queue
         if (Config.enableCluster) {
@@ -46,7 +46,7 @@ public class Server {
     /**
      * init config
      */
-    private static void initCongig() {
+    private static void initConfig() {
         // 初始化 server-config
         ServerInfo serverInfo = BeanUtil.getBean("serverInfo", ServerInfo.class);
         if (serverInfo != null) {
