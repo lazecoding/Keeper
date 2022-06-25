@@ -21,9 +21,9 @@ public enum ResponseType {
     MONITOR("M", "MONITOR"),
 
     /**
-     * 周期推送
+     * 在线链接数量
      */
-    CYCLE("C", "周期推送");
+    ONLINE_CHANNEL_NUM("OCN", "在线链接数量");
 
     private String code;
 
