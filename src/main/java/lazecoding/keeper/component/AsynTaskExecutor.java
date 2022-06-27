@@ -34,7 +34,7 @@ public class AsynTaskExecutor {
                 thread.setName("executor-async-task");
                 thread.setDaemon(true);
                 return thread;
-            }, new ThreadPoolExecutor.AbortPolicy());
+            }, new ThreadPoolExecutor.CallerRunsPolicy());
 
     /**
      * 提交任务
