@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author lazecoding
  */
-public class AsynTaskExecutor {
+public class AsyncTaskExecutor {
     /**
      * CPU 核心数量
      */
@@ -21,7 +21,7 @@ public class AsynTaskExecutor {
     /**
      * 私有，禁止实例化
      */
-    private AsynTaskExecutor() {
+    private AsyncTaskExecutor() {
 
     }
 

@@ -7,7 +7,7 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import lazecoding.keeper.component.AsynTaskExecutor;
+import lazecoding.keeper.component.AsyncTaskExecutor;
 import lazecoding.keeper.plugins.cluster.ClusterManager;
 import lazecoding.keeper.plugins.cluster.ClusterMessageModel;
 
@@ -42,7 +42,7 @@ public class PulsarConsumer {
                     // 消息转发到业务线程池处理，增加 MQ 吞吐量
                     String messageData = new String(message.getData());
                     logger.debug("message-sync-consumer topic:{} subscription:{} message.data:{}", topicName, localSubscriptionName, messageData);
-                    AsynTaskExecutor.submitTask(() -> {
+                    AsyncTaskExecutor.submitTask(() -> {
                         try {
                             ClusterMessageModel clusterMessageModel = MAPPER.readValue(messageData, ClusterMessageModel.class);
                             ClusterManager.consumeClusterMessage(clusterMessageModel);

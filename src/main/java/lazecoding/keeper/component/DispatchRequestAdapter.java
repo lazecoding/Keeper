@@ -24,7 +24,7 @@ public class DispatchRequestAdapter {
     /**
      * 请求调度
      * <p>
-     * 对于耗时的业务，用业务线程池 {@link AsynTaskExecutor} 执行,小业务当前 worker 线程池完成
+     * 对于耗时的业务，用业务线程池 {@link AsyncTaskExecutor} 执行,小业务当前 worker 线程池完成
      */
     public void dispatchRequest(ChannelHandlerContext ctx, RequestModel requestModel) throws JsonProcessingException {
 
@@ -46,6 +46,6 @@ public class DispatchRequestAdapter {
 
         // 异步线程池处理
         ExecuteRequestService finalExecuteRequestService = executeRequestService;
-        AsynTaskExecutor.submitTask(() -> finalExecuteRequestService.doRequest(ctx, requestContent));
+        AsyncTaskExecutor.submitTask(() -> finalExecuteRequestService.doRequest(ctx, requestContent));
     }
 }
