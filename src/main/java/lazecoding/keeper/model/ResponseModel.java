@@ -18,14 +18,14 @@ public class ResponseModel {
     /**
      * 响应内容 json 格式
      */
-    private String content = "";
+    private Object content;
 
     /**
      * 时间戳
      */
     private long timestamp = 0L;
 
-    public ResponseModel(String type, String content) {
+    public ResponseModel(String type, Object content) {
         this.type = type;
         this.content = content;
         this.timestamp = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
@@ -39,11 +39,11 @@ public class ResponseModel {
         this.type = type;
     }
 
-    public String getContent() {
+    public Object getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Object content) {
         this.content = content;
     }
 

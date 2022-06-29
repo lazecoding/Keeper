@@ -50,7 +50,7 @@ public class OnlineChannelTask extends KeeperTask {
             return;
         }
         int num = GroupContainer.CHANNEL_CONTEXT.size();
-        ResponseModel responseModel = new ResponseModel(ResponseType.ONLINE_CHANNEL_NUM.getCode(), num + "");
+        ResponseModel responseModel = new ResponseModel(ResponseType.ONLINE_CHANNEL_NUM.getCode(), num);
         String responseContent = null;
         try {
             responseContent = MAPPER.writeValueAsString(responseModel);

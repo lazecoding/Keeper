@@ -78,7 +78,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
 
         if (type.equals(RequestType.MONITOR.getCode())) {
             // M
-            ResponseModel responseModel = new ResponseModel(ResponseType.MONITOR.getCode(), GroupContainer.CHANNEL_CONTEXT.size() + "");
+            ResponseModel responseModel = new ResponseModel(ResponseType.MONITOR.getCode(), GroupContainer.CHANNEL_CONTEXT.size());
             String responseContent = MAPPER.writeValueAsString(responseModel);
             MessageSender.sendLocalMessage(ctx, responseContent);
             return;
