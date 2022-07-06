@@ -15,9 +15,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeeperStartupRunner implements ApplicationRunner {
 
+    private static final Logger logger = LoggerFactory.getLogger(KeeperStartupRunner.class);
+
+
     @Override
     public void run(ApplicationArguments args) {
-        // 启动 WebSocket Server
-        Server.start();
+        try {
+            // 启动 WebSocket Server
+            Server.start();
+        } catch (Exception e) {
+            logger.error("ApplicationRunner Exception", e);
+        }
     }
 }
