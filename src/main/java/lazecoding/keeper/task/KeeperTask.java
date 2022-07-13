@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,7 +63,7 @@ public abstract class KeeperTask {
         if (delay <= 0) {
             return;
         }
-        scheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+        scheduledExecutor = new ScheduledThreadPoolExecutor(1, runnable -> {
             Thread thread = new Thread(runnable);
             thread.setName(taskName);
             thread.setDaemon(true);
