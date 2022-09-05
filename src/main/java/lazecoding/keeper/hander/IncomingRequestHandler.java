@@ -31,11 +31,6 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
      */
     private static final String PING = "I";
 
-    /**
-     * P0NG 响应消息内容
-     */
-    private static final String PONG = "0";
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) throws Exception {
@@ -49,7 +44,6 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
 
         // 心跳
         if (PING.equals(requestContext)){
-            MessageSender.sendLocalMessage(ctx, PONG);
             return;
         }
 
