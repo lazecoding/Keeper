@@ -37,7 +37,7 @@ public class IncomingRequestHandler extends SimpleChannelInboundHandler<TextWebS
         String requestContext = frame.text();
         RequestModel requestModel;
 
-        if (StringUtils.isEmpty(requestContext)){
+        if (!StringUtils.hasText(requestContext)){
             errorRequest(ctx, "Nil Message");
             return;
         }

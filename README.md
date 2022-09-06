@@ -1,4 +1,4 @@
-# Keeper release-1.0.0
+# Keeper release-2.0.0
 
 分布式 WebSocket 服务器。
 

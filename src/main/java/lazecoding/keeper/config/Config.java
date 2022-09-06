@@ -35,19 +35,6 @@ public class Config {
     public static String soBacklog = "1024";
 
     // plugin config
-
-    /**
-     * 是否启用用户模块
-     */
-    public static boolean enableUser = Boolean.FALSE;
-
-    /**
-     * 是否启用用户群组模块
-     * <p>
-     * 当启用群组模块，默认启用用户模块（enableUser = true）。
-     */
-    public static boolean enableGroup = Boolean.FALSE;
-
     /**
      * 是否启用心跳检测模块
      */
@@ -68,10 +55,6 @@ public class Config {
      */
     public static String eventLoopCycle = "15";
 
-    /**
-     * 是否启用集群
-     */
-    public static boolean enableCluster = Boolean.FALSE;
 
     public static String getString() {
         return "ServerConfig {\n" +
@@ -80,15 +63,12 @@ public class Config {
                 "  contextPath='" + contextPath + "'" +
                 ", serverPort='" + serverPort + "'" +
                 ", httpObjectLength='" + httpObjectLength + "'" +
-                ", soBacklog='" + soBacklog + "'" +
+                ", soBacklog='" + soBacklog + "', " +
                 "\n" +
-                "  enableUser='" + enableUser + "'" +
-                ", enableGroup='" + enableGroup + "'" +
-                ", enableHearBeat='" + enableHearBeat + "'" +
+                "  enableHearBeat='" + enableHearBeat + "'" +
                 ", hearBeatCycle='" + hearBeatCycle + "'" +
                 ", enableEventLoop='" + enableEventLoop + "'" +
                 ", eventLoopCycle='" + eventLoopCycle + "'" +
-                ", enableCluster='" + enableCluster + "'" +
                 "\n}";
     }
 

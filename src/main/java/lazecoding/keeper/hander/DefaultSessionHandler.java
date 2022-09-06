@@ -4,18 +4,19 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpRequest;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 import lazecoding.keeper.component.GroupContainer;
 import lazecoding.keeper.config.Config;
 import lazecoding.keeper.constant.DigitalConstant;
 import lazecoding.keeper.constant.QueryKeys;
-import lazecoding.keeper.plugins.user.UserManager;
 import lazecoding.keeper.util.ChannelUtil;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * （默认）会话处理器
@@ -60,18 +61,28 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                 // 使用方式 value = queryParams.get(key).get(0)
                 MultiValueMap<String, String> queryParams = uriComponents.getQueryParams();
 
+                String accessToken;
+                if (!queryParams.containsKey(QueryKeys.AT.name())
+                        || StringUtils.isEmpty(accessToken = queryParams.get(QueryKeys.AT.name()).get(DigitalConstant.ZERO))) {
+                    ctx.close();
+                    return;
+                }
+
+                String channelId = ChannelUtil.getChannelId(ctx);
+                GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
+
+                // 该 channelId 和哪个 accessToken 绑定
+                GroupContainer.CHANNEL_USER.put(channelId, accessToken);
+
+                // 该 accessToken 绑定了哪些 channelId
+                CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.putIfAbsent(accessToken, new CopyOnWriteArraySet<>());
+                if (channelSet == null) {
+                    channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
+                }
+                channelSet.add(channelId);
+
                 // 处理参数列表
                 // 启用 用户 模块
-                if (Config.enableUser) {
-                    // 启用用户模块，必须传入用户标识
-                    String accessToken;
-                    if (!queryParams.containsKey(QueryKeys.AT.name())
-                            || StringUtils.isEmpty(accessToken = queryParams.get(QueryKeys.AT.name()).get(DigitalConstant.ZERO))) {
-                        ctx.close();
-                        return;
-                    }
-                    UserManager.initUser(accessToken, ctx);
-                }
                 // 重新设置 WebSocket Path
                 request.setUri(Config.contextPath);
             }
@@ -93,8 +104,6 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        String channelId = ChannelUtil.getChannelId(ctx);
-        GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
     }
 
     /**
@@ -104,8 +113,16 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) {
         String channelId = ChannelUtil.getChannelId(ctx);
         GroupContainer.CHANNEL_CONTEXT.remove(channelId);
-        if (Config.enableUser) {
-            UserManager.removeUser(ctx);
+
+        if (GroupContainer.CHANNEL_USER.containsKey(channelId)) {
+            // 删除正向关系
+            String accessToken = GroupContainer.CHANNEL_USER.get(channelId);
+            GroupContainer.CHANNEL_USER.remove(channelId);
+            // 删除反向关系
+            CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
+            if (!CollectionUtils.isEmpty(channelSet)) {
+                channelSet.remove(channelId);
+            }
         }
     }
 

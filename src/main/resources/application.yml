@@ -21,17 +21,6 @@ server:
       enabled: true
       force: true
 
-pulsar:
-  # 多个形如 pulsar://localhost:6550,localhost:6651,localhost:6652
-  server-url: pulsar://192.168.83.22:6650
-  # 多个形如 http://localhost:8080,localhost:8081,localhost:8082
-  http-url: http://192.168.83.22:8080
-  # 租户
-  tenant:
-  # 命名空间
-  namespace:
-  # token
-  token:
 
 project:
   server-config:
@@ -44,10 +33,6 @@ project:
     # TCP 全队列大小
     soBacklog: 2048
   plugin-config:
-    # 开启用户
-    enableUser: true
-    # 开启群组模块，默认开启用户
-    enableGroup: true
     # 开启心跳
     enableHearBeat: false
     # 设置心跳周期，单位 S
@@ -56,5 +41,3 @@ project:
     enableEventLoop: false
     # 设置事件循环周期，单位 S
     eventLoopCycle: 15
-    # 开启集群
-    enableCluster: false

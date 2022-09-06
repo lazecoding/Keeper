@@ -10,7 +10,7 @@
     </parent>
     <groupId>lazecoding</groupId>
     <artifactId>keeper</artifactId>
-    <version>release-1.0.0</version>
+    <version>release-2.0.0</version>
     <name>Keeper</name>
     <description>Distributed WebSocket Server</description>
     <properties>
@@ -41,13 +41,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty.version}</version>
-        </dependency>
-
-        <!-- pulsar all -->
-        <dependency>
-            <groupId>org.apache.pulsar</groupId>
-            <artifactId>pulsar-client-all</artifactId>
-            <version>${pulsar.version}</version>
         </dependency>
 
         <!-- 配置 Redis 启动器 -->

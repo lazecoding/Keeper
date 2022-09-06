@@ -4,11 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import lazecoding.keeper.config.Config;
 import lazecoding.keeper.constant.DigitalConstant;
-import lazecoding.keeper.plugins.cluster.ClusterManager;
-import lazecoding.keeper.plugins.cluster.ClusterMessageModel;
-import lazecoding.keeper.plugins.group.GroupManager;
 
 import java.util.List;
 import java.util.Set;
@@ -46,11 +42,11 @@ public class MessageSender {
     /**
      * 发送信息给本地用户
      */
-    public static void sendLocalMessageToUser(String userId, String message) {
-        if (!Config.enableUser || StringUtils.isEmpty(userId)) {
+    public static void sendLocalMessageToUser(String accessToken, String message) {
+        if (!StringUtils.hasText(accessToken) ) {
             return;
         }
-        CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(userId);
+        CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
         if (channelSet != null && channelSet.size() > DigitalConstant.ZERO) {
             ChannelHandlerContext ctx;
             for (String channelId : channelSet) {
@@ -65,27 +61,13 @@ public class MessageSender {
     /**
      * 发送信息给本地用户
      */
-    public static void sendLocalMessageToUser(List<String> userIds, String message) {
-        if (!Config.enableUser || CollectionUtils.isEmpty(userIds)) {
+    public static void sendLocalMessageToUser(List<String> accessTokens, String message) {
+        if (CollectionUtils.isEmpty(accessTokens) ) {
             return;
         }
-        for (String userId : userIds) {
-            sendLocalMessageToUser(userId, message);
+        for (String accessToken : accessTokens) {
+            sendLocalMessageToUser(accessToken, message);
         }
-    }
-
-    /**
-     * 发送信息给本地群组
-     */
-    public static void sendLocalMessageToGroup(String groupId, String message) {
-        if (!Config.enableGroup || StringUtils.isEmpty(groupId)) {
-            return;
-        }
-        List<String> userIds = GroupManager.findUserIdInGroup(groupId);
-        if (CollectionUtils.isEmpty(userIds)) {
-            return;
-        }
-        sendLocalMessageToUser(userIds, message);
     }
 
     /**
@@ -106,65 +88,5 @@ public class MessageSender {
         }
     }
 
-    /**
-     * 发送信息给集群用户
-     */
-    public static void sendMessageToUser(String userId, String message) {
-        if (!Config.enableUser) {
-            return;
-        }
-        if (!Config.enableCluster) {
-            sendLocalMessageToUser(userId, message);
-            return;
-        }
-        ClusterManager.sendClusterMessage(ClusterMessageModel.getUserInstance(userId, message));
-    }
-
-    /**
-     * 发送信息给集群用户
-     */
-    public static void sendMessageToUser(List<String> userIds, String message) {
-        if (!Config.enableUser || CollectionUtils.isEmpty(userIds)) {
-            return;
-        }
-        if (!Config.enableCluster) {
-            sendLocalMessageToUser(userIds, message);
-            return;
-        }
-        ClusterManager.sendClusterMessage(ClusterMessageModel.getUserInstance(userIds, message));
-    }
-
-    /**
-     * 发送信息给集群群组（转化为发给多个用户）
-     */
-    public static void sendMessageToGroup(String groupId, String message) {
-        if (!Config.enableGroup || StringUtils.isEmpty(groupId)) {
-            return;
-        }
-        List<String> userIds = GroupManager.findUserIdInGroup(groupId);
-        if (CollectionUtils.isEmpty(userIds)) {
-            return;
-        }
-        if (!Config.enableCluster) {
-            // 发给本地用户
-            sendLocalMessageToUser(userIds, message);
-            return;
-        }
-        // 发给集群用户
-        ClusterManager.sendClusterMessage(ClusterMessageModel.getUserInstance(userIds, message));
-    }
-
-    /**
-     * 集群广播
-     *
-     * @return
-     */
-    public static void sendMessageForBroadcast(String message) {
-        if (!Config.enableCluster) {
-            sendLocalMessageForBroadcast(message);
-            return;
-        }
-        ClusterManager.sendClusterMessage(ClusterMessageModel.getBroadcastInstance(message));
-    }
 
 }
