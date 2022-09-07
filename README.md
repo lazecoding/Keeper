@@ -19,40 +19,6 @@
 
 本服务功能插件化。
 
-#### 集群
-
-`project.plugin-config.enableCluster` 属性决定是否启用 `集群` 模块。
-
-```yaml
-project:
-  plugin-config:
-    enableCluster: true
-```
-
-> 如果启用集群模块，多个服务器将通过消息中间件同步消息，要求必须配置消息中间件。
-
-#### 用户
-
-`project.plugin-config.enableUser` 属性决定是否启用 `用户` 模块。
-
-```yaml
-project:
-  plugin-config:
-    enableUser: true
-```
-
-#### 群组
-
-`project.plugin-config.enableGroup` 属性决定是否启用 `群组` 模块。
-
-```yaml
-project:
-  plugin-config:
-    enableGroup: true
-```
-
-> 如果启用群组模块，则默认启用用户模块；否则以单机模式运行。
-
 #### 心跳检测
 
 `project.plugin-config.enableHearBeat` 属性决定是否启用 `心跳检测` 模块，`project.plugin-config.hearBeatCycle` 控制心跳周期间隔时长，单位 s/秒。
