@@ -1,19 +1,16 @@
 # Keeper release-2.0.0
 
+待施工...........
+
 分布式 WebSocket 服务器。
 
 ### 架构
 
 本项目基于 Netty 开发，继承 Netty 架构并进一步扩展。
 
-<div align="left">
-    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper.png" width="800px">
-</div>
-
 特点：
 
 - Boss 线程、IO 线程、业务线程分离。
-- 通过 MQ 广播，实现集群通信。
 
 ### 插件
 
