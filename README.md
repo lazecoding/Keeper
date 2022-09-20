@@ -165,4 +165,4 @@ http {
 
 ## License
 
-Keeper software is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/lazecoding/Keeper/blob/main/LICENSE) file for details.
+Keeper software is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/lazecoding/Keeper/blob/release-1.0.0/README.md) file for details.
