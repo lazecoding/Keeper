@@ -22,10 +22,13 @@ public class KeeperStartupRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         try {
-            // 启动 WebSocket Server
+            // 0.初始化配置
+            Server.init();
+
+            // 1.启动 WebSocket Server
             Server.start();
 
-            // 注册集群消息
+            // 2.注册集群消息
             ClusterPusher.registered();
         } catch (Exception e) {
             logger.error("ApplicationRunner Exception", e);

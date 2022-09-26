@@ -21,17 +21,13 @@ public class Server {
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void start() {
-        // init
-        init();
-
         // doStart
         Executors.newSingleThreadExecutor().submit(Bootstrap::doStart);
     }
 
-    private static void init() {
+    public static void init() {
         // init config
         initConfig();
-
     }
 
     /**
