@@ -43,18 +43,18 @@ public class MessageSender {
      * 发送信息给本地用户
      */
     public static void sendLocalMessageToUser(String accessToken, String message) {
-        if (!StringUtils.hasText(accessToken) ) {
+        if (!StringUtils.hasText(accessToken)) {
             return;
         }
         CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
         if (channelSet != null && channelSet.size() > DigitalConstant.ZERO) {
-            ChannelHandlerContext ctx;
-            for (String channelId : channelSet) {
-                ctx = GroupContainer.CHANNEL_CONTEXT.get(channelId);
+            channelSet.forEach((c) -> {
+                ChannelHandlerContext ctx = GroupContainer.CHANNEL_CONTEXT.get(c);
                 if (!sendLocalMessage(ctx, message)) {
                     // 失败
                 }
-            }
+            });
+
         }
     }
 
@@ -62,7 +62,7 @@ public class MessageSender {
      * 发送信息给本地用户
      */
     public static void sendLocalMessageToUser(List<String> accessTokens, String message) {
-        if (CollectionUtils.isEmpty(accessTokens) ) {
+        if (CollectionUtils.isEmpty(accessTokens)) {
             return;
         }
         for (String accessToken : accessTokens) {
@@ -87,6 +87,5 @@ public class MessageSender {
             }
         }
     }
-
 
 }
