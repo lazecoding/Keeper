@@ -13,7 +13,7 @@ public enum RequestType {
      */
     MONITOR("M", "MONITOR"),
 
-    B_3("B3", "业务-1");
+    T_1("T1", "测试 1 - 消息测试");
 
     private String code;
 

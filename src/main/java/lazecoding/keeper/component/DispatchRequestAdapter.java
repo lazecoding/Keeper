@@ -34,8 +34,8 @@ public class DispatchRequestAdapter {
         ExecuteRequestService executeRequestService;
 
         // 根据请求获取实例
-        if (requestType.equals(RequestType.B_3.getCode())) {
-            executeRequestService = BeanUtil.getBean("executeRequestServiceImpl", ExecuteRequestService.class);
+        if (requestType.equals(RequestType.T_1.getCode())) {
+            executeRequestService = BeanUtil.getBean("cluster-service", ExecuteRequestService.class);
         } else {
             // 没有匹配到 ExecuteRequestService 实例
             ResponseModel responseModel = new ResponseModel(ResponseType.EXCEPTION.getCode(), "请求分发异常");

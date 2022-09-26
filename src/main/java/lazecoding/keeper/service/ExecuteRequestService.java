@@ -18,7 +18,7 @@ public interface ExecuteRequestService {
      * 处理请求
      *
      * @param ctx
-     * @param requestModel 请求体（json）
+     * @param requestContext 请求体（json）
      */
-    void doRequest(ChannelHandlerContext ctx, String requestModel);
+    void doRequest(ChannelHandlerContext ctx, String requestContext);
 }
