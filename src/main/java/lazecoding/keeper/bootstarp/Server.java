@@ -1,19 +1,18 @@
 package lazecoding.keeper.bootstarp;
 
-import lazecoding.keeper.constant.DigitalConstant;
-import org.apache.pulsar.client.admin.PulsarAdminException;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import lazecoding.keeper.config.Config;
 import lazecoding.keeper.config.PluginInfo;
 import lazecoding.keeper.config.ServerInfo;
 import lazecoding.keeper.plugins.mq.PulsarInit;
 import lazecoding.keeper.util.BeanUtil;
+import org.apache.pulsar.client.admin.PulsarAdminException;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
 
 /**
  * Server 入口
@@ -25,14 +24,11 @@ public class Server {
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void start() {
-        // init
-        init();
-
         // doStart
         Executors.newSingleThreadExecutor().submit(Bootstrap::doStart);
     }
 
-    private static void init() {
+    public static void init() {
         // init config
         initConfig();
 
