@@ -52,13 +52,12 @@ public class MessageSender {
         }
         CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(userId);
         if (channelSet != null && channelSet.size() > DigitalConstant.ZERO) {
-            ChannelHandlerContext ctx;
-            for (String channelId : channelSet) {
-                ctx = GroupContainer.CHANNEL_CONTEXT.get(channelId);
+            channelSet.forEach((c) -> {
+                ChannelHandlerContext ctx = GroupContainer.CHANNEL_CONTEXT.get(c);
                 if (!sendLocalMessage(ctx, message)) {
                     // 失败
                 }
-            }
+            });
         }
     }
 
