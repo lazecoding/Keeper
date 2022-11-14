@@ -15,7 +15,7 @@
     <description>Distributed WebSocket Server</description>
     <properties>
         <java.version>11</java.version>
-        <netty.version>4.1.76.Final</netty.version>
+        <netty.version>4.1.84.Final</netty.version>
         <pulsar.version>2.9.1</pulsar.version>
     </properties>
     <dependencies>
