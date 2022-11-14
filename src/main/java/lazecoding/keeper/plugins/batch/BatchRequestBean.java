@@ -58,9 +58,9 @@ public class BatchRequestBean {
 
     @Override
     public String toString() {
-        return "ClusterMessageBean{" +
+        return "BatchRequestBean{" +
                 "accessToken='" + accessToken + '\'' +
-                ", responseModelList=" + responseModelList.toString() +
+                ", responseModelList=" + responseModelList +
                 '}';
     }
 }
