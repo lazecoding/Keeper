@@ -1,7 +1,7 @@
 package lazecoding.keeper.listener;
 
 import lazecoding.keeper.bootstarp.Server;
-import lazecoding.keeper.plugins.cluster.ClusterPusher;
+import lazecoding.keeper.plugins.batch.BatchExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -28,8 +28,8 @@ public class KeeperStartupRunner implements ApplicationRunner {
             // 1.启动 WebSocket Server
             Server.start();
 
-            // 2.注册集群消息
-            ClusterPusher.registered();
+            // 2.注册 BatchExecutor
+            BatchExecutor.registered();
         } catch (Exception e) {
             logger.error("ApplicationRunner Exception", e);
         }

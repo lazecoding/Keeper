@@ -1,4 +1,4 @@
-package lazecoding.keeper.plugins.cluster;
+package lazecoding.keeper.plugins.batch;
 
 import lazecoding.keeper.model.ResponseModel;
 
@@ -6,11 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 集群消息
+ * 批量请求
  *
  * @author lazecoding
  */
-public class ClusterMessageBean {
+public class BatchRequestBean {
 
     /**
      * 用户访问标识
@@ -22,20 +22,20 @@ public class ClusterMessageBean {
      */
     private List<ResponseModel> responseModelList = new LinkedList<>();
 
-    public ClusterMessageBean() {
+    public BatchRequestBean() {
     }
 
-    public ClusterMessageBean(String accessToken, ResponseModel responseModel) {
+    public BatchRequestBean(String accessToken, ResponseModel responseModel) {
         this.accessToken = accessToken;
         this.responseModelList.add(responseModel);
     }
 
-    public ClusterMessageBean addResponseModel(ResponseModel responseModel) {
+    public BatchRequestBean addResponseModel(ResponseModel responseModel) {
         this.responseModelList.add(responseModel);
         return this;
     }
 
-    public ClusterMessageBean addResponseModelList(List<ResponseModel> responseModelList) {
+    public BatchRequestBean addResponseModelList(List<ResponseModel> responseModelList) {
         this.responseModelList.addAll(responseModelList);
         return this;
     }

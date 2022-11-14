@@ -1,4 +1,4 @@
-package lazecoding.keeper.plugins.cluster;
+package lazecoding.keeper.plugins.batch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,37 +11,37 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 集群消息推送
+ * 批量执行器
  *
  * @author lazecoding
  */
-public class ClusterPusher {
+public class BatchExecutor {
 
-    private final static Logger logger = LoggerFactory.getLogger(ClusterPusher.class);
+    private final static Logger logger = LoggerFactory.getLogger(BatchExecutor.class);
 
     /**
      * 在队列尾部添加消息
      */
-    public static boolean offer(ClusterMessageBean clusterMessageBean) {
-        if (ObjectUtils.isEmpty(clusterMessageBean)) {
+    public static boolean offer(BatchRequestBean batchRequestBean) {
+        if (ObjectUtils.isEmpty(batchRequestBean)) {
             return false;
         }
-        boolean success = queue.offer(clusterMessageBean);
+        boolean success = queue.offer(batchRequestBean);
         if (success && state == 0) {
             synchronized(task){
                 task.notifyAll();
-                logger.debug("ClusterPusher Task notifyAll");
+                logger.debug("BatchExecutor Task notifyAll");
             }
         }
         return success;
     }
 
     /**
-     * 从队列头部添加消息
+     * 从队列头部取出消息
      */
-    public static ClusterMessageBean poll(ClusterMessageBean clusterMessageBean) {
+    public static BatchRequestBean poll(BatchRequestBean batchRequestBean) {
         Object obj = queue.poll();
-        return ObjectUtils.isEmpty(obj) ? null : (ClusterMessageBean) obj;
+        return ObjectUtils.isEmpty(obj) ? null : (BatchRequestBean) obj;
     }
 
     /**
@@ -63,10 +63,10 @@ public class ClusterPusher {
      * 启动消息推送
      */
     public static void registered() {
-        logger.info("ClusterPusher register.");
+        logger.info("BatchExecutor register.");
         // 启动消费者线程
         CONSUMER_EXECUTOR.submit(task);
-        logger.info("ClusterPusher registered.");
+        logger.info("BatchExecutor registered.");
     }
 
     /**
@@ -98,10 +98,11 @@ public class ClusterPusher {
                     }
                 }
                 // 如果有数据就消费
-                ClusterMessageBean clusterMessageBean = queue.poll();
+                BatchRequestBean batchRequestBean = queue.poll();
                 // TODO 处理消息
-                if (!ObjectUtils.isEmpty(clusterMessageBean)) {
-                    System.out.println(clusterMessageBean.toString());
+
+                if (!ObjectUtils.isEmpty(batchRequestBean)) {
+                    System.out.println(batchRequestBean.toString());
                 }
 
             }
@@ -116,7 +117,7 @@ public class ClusterPusher {
     /**
      * 消息队列
      */
-    private static final Queue<ClusterMessageBean> queue = new ConcurrentLinkedQueue<>();
+    private static final Queue<BatchRequestBean> queue = new ConcurrentLinkedQueue<>();
 
 
     /**
