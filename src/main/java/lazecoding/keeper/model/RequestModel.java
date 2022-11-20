@@ -1,5 +1,7 @@
 package lazecoding.keeper.model;
 
+import java.io.Serializable;
+
 /**
  * 请求模型
  * <br/>
@@ -7,7 +9,9 @@ package lazecoding.keeper.model;
  *
  * @author lazecoding
  */
-public class RequestModel {
+public class RequestModel implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 请求类型：M 获取连接数;B 业务请求

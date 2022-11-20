@@ -2,6 +2,7 @@ package lazecoding.keeper.plugins.batch;
 
 import lazecoding.keeper.model.ResponseModel;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import java.util.List;
  *
  * @author lazecoding
  */
-public class BatchRequestBean {
+public class BatchRequestBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户访问标识
