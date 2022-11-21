@@ -2,6 +2,7 @@ package lazecoding.keeper.model;
 
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,9 @@ import java.util.Map;
  *
  * @author lazecoding
  */
-public class ResultBean {
+public class ResultBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 附加信息
