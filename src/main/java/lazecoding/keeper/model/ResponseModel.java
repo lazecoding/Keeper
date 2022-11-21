@@ -1,5 +1,6 @@
 package lazecoding.keeper.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -8,7 +9,10 @@ import java.time.ZoneOffset;
  *
  * @author lazecoding
  */
-public class ResponseModel {
+public class ResponseModel implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * 业务类型:
      * E 请求异常，C 循环任务，B 业务请求
