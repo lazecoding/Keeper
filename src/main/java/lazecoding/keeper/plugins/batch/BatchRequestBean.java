@@ -1,7 +1,5 @@
 package lazecoding.keeper.plugins.batch;
 
-import lazecoding.keeper.model.ResponseModel;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,23 +21,23 @@ public class BatchRequestBean implements Serializable {
     /**
      * 响应内容
      */
-    private List<ResponseModel> responseModelList = new LinkedList<>();
+    private List<BatchResponseModel> batchResponseModelList = new LinkedList<>();
 
     public BatchRequestBean() {
     }
 
-    public BatchRequestBean(String accessToken, ResponseModel responseModel) {
+    public BatchRequestBean(String accessToken, BatchResponseModel batchResponseModel) {
         this.accessToken = accessToken;
-        this.responseModelList.add(responseModel);
+        this.batchResponseModelList.add(batchResponseModel);
     }
 
-    public BatchRequestBean addResponseModel(ResponseModel responseModel) {
-        this.responseModelList.add(responseModel);
+    public BatchRequestBean addResponseModel(BatchResponseModel batchResponseModel) {
+        this.batchResponseModelList.add(batchResponseModel);
         return this;
     }
 
-    public BatchRequestBean addResponseModelList(List<ResponseModel> responseModelList) {
-        this.responseModelList.addAll(responseModelList);
+    public BatchRequestBean addResponseModelList(List<BatchResponseModel> batchResponseModelList) {
+        this.batchResponseModelList.addAll(batchResponseModelList);
         return this;
     }
 
@@ -51,19 +49,19 @@ public class BatchRequestBean implements Serializable {
         this.accessToken = accessToken;
     }
 
-    public List<ResponseModel> getResponseModelList() {
-        return responseModelList;
+    public List<BatchResponseModel> getResponseModelList() {
+        return batchResponseModelList;
     }
 
-    public void setResponseModelList(List<ResponseModel> responseModelList) {
-        this.responseModelList = responseModelList;
+    public void setResponseModelList(List<BatchResponseModel> batchResponseModelList) {
+        this.batchResponseModelList = batchResponseModelList;
     }
 
     @Override
     public String toString() {
         return "BatchRequestBean{" +
                 "accessToken='" + accessToken + '\'' +
-                ", responseModelList=" + responseModelList +
+                ", responseModelList=" + batchResponseModelList +
                 '}';
     }
 }

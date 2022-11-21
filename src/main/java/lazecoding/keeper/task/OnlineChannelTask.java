@@ -3,8 +3,9 @@ package lazecoding.keeper.task;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lazecoding.keeper.component.GroupContainer;
 import lazecoding.keeper.component.MessageSender;
-import lazecoding.keeper.constant.ResponseType;
-import lazecoding.keeper.model.ResponseModel;
+import lazecoding.keeper.constant.ResponseCode;
+import lazecoding.keeper.constant.ServerConstants;
+import lazecoding.keeper.model.WebSocketResult;
 import lazecoding.keeper.plugins.eventloop.EventLoop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +51,10 @@ public class OnlineChannelTask extends KeeperTask {
             return;
         }
         int num = GroupContainer.CHANNEL_CONTEXT.size();
-        ResponseModel responseModel = new ResponseModel(ResponseType.ONLINE_CHANNEL_NUM.getCode(), num);
+        WebSocketResult webSocketResult = new WebSocketResult(ServerConstants.APP, ResponseCode.LOCAL_ONLINE_NUM.getCode(), num);
         String responseContent = null;
         try {
-            responseContent = MAPPER.writeValueAsString(responseModel);
+            responseContent = MAPPER.writeValueAsString(webSocketResult);
             MessageSender.sendLocalMessageForBroadcast(responseContent);
         } catch (JsonProcessingException e) {
             logger.error("Json 解析异常", e);

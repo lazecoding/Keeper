@@ -1,15 +1,12 @@
 package lazecoding.keeper.component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
+import lazecoding.keeper.model.ClientMessageBean;
+import lazecoding.keeper.model.WebSocketRequest;
 import org.springframework.stereotype.Component;
-import lazecoding.keeper.constant.RequestType;
-import lazecoding.keeper.constant.ResponseType;
-import lazecoding.keeper.model.RequestModel;
-import lazecoding.keeper.model.ResponseModel;
-import lazecoding.keeper.service.ExecuteRequestService;
-import lazecoding.keeper.util.BeanUtil;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * 请求调度器
@@ -26,26 +23,37 @@ public class DispatchRequestAdapter {
      * <p>
      * 对于耗时的业务，用业务线程池 {@link AsyncTaskExecutor} 执行,小业务当前 worker 线程池完成
      */
-    public void dispatchRequest(ChannelHandlerContext ctx, RequestModel requestModel) throws JsonProcessingException {
-
-        String requestType = requestModel.getType();
-        String requestContent = requestModel.getContent();
-
-        ExecuteRequestService executeRequestService;
-
-        // 根据请求获取实例
-        if (requestType.equals(RequestType.T_1.getCode())) {
-            executeRequestService = BeanUtil.getBean("batch-test-service", ExecuteRequestService.class);
-        } else {
-            // 没有匹配到 ExecuteRequestService 实例
-            ResponseModel responseModel = new ResponseModel(ResponseType.EXCEPTION.getCode(), "请求分发异常");
-            String responseContent = MAPPER.writeValueAsString(responseModel);
-            MessageSender.sendLocalMessage(ctx, responseContent);
+    public void dispatchRequest(ChannelHandlerContext ctx, WebSocketRequest request) {
+        if (ObjectUtils.isEmpty(request)) {
+            MessageSender.errorResponse(ctx, "request is nil.");
+            return;
+        }
+        String app = request.getApp();
+        String event = request.getEvent();
+        if (!StringUtils.hasText(app)) {
+            MessageSender.errorResponse(ctx, "request.app is nil.");
+            return;
+        }
+        if (!StringUtils.hasText(event)) {
+            MessageSender.errorResponse(ctx, "request.event is nil.");
             return;
         }
 
-        // 异步线程池处理
-        ExecuteRequestService finalExecuteRequestService = executeRequestService;
-        AsyncTaskExecutor.submitTask(() -> finalExecuteRequestService.doRequest(ctx, requestContent));
+        // 获取当前链接的 userId
+        String channelId = ctx.channel().id().asLongText();
+        String userId = GroupContainer.CHANNEL_USER.get(channelId);
+        if (!StringUtils.hasText(userId)) {
+            MessageSender.errorResponse(ctx, "user is nil.");
+            return;
+        }
+        // 组织请求的更多属性
+        ClientMessageBean clientMessageBean = new ClientMessageBean(app, event, request.getData(), userId);
+        try {
+            System.out.println(clientMessageBean.toString());
+            // TODO 法送到 MQ，目标 app 的服务端消费
+            MessageSender.successResponse(ctx, "request send to app.");
+        } catch (Exception e) {
+            MessageSender.errorResponse(ctx, "request send to app exception.");
+        }
     }
 }

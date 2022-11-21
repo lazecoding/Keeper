@@ -8,9 +8,9 @@ package lazecoding.keeper.constant;
 public enum QueryKeys {
 
     /**
-     * 用户参数列表的 Key，access-token
+     * 用户参数列表的 Key，userId
      */
-    AT("access-token");
+    U("userId");
 
 
     private String describe;

@@ -1,10 +1,15 @@
 package lazecoding.keeper.component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lazecoding.keeper.constant.DigitalConstant;
+import lazecoding.keeper.constant.ServerConstants;
+import lazecoding.keeper.constant.ResponseCode;
+import lazecoding.keeper.model.WebSocketResult;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import lazecoding.keeper.constant.DigitalConstant;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +21,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author lazecoding
  */
 public class MessageSender {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
 
     /**
      * 私有，禁止实例化
@@ -42,11 +50,11 @@ public class MessageSender {
     /**
      * 发送信息给本地用户
      */
-    public static void sendLocalMessageToUser(String accessToken, String message) {
-        if (!StringUtils.hasText(accessToken)) {
+    public static void sendLocalMessageToUser(String userId, String message) {
+        if (!StringUtils.hasText(userId)) {
             return;
         }
-        CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
+        CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(userId);
         if (channelSet != null && channelSet.size() > DigitalConstant.ZERO) {
             channelSet.forEach((c) -> {
                 ChannelHandlerContext ctx = GroupContainer.CHANNEL_CONTEXT.get(c);
@@ -61,12 +69,12 @@ public class MessageSender {
     /**
      * 发送信息给本地用户
      */
-    public static void sendLocalMessageToUser(List<String> accessTokens, String message) {
-        if (CollectionUtils.isEmpty(accessTokens)) {
+    public static void sendLocalMessageToUser(List<String> userIds, String message) {
+        if (CollectionUtils.isEmpty(userIds)) {
             return;
         }
-        for (String accessToken : accessTokens) {
-            sendLocalMessageToUser(accessToken, message);
+        for (String userId : userIds) {
+            sendLocalMessageToUser(userId, message);
         }
     }
 
@@ -87,5 +95,33 @@ public class MessageSender {
             }
         }
     }
+
+    /**
+     * 成功响应
+     */
+    public static void successResponse(ChannelHandlerContext ctx, String message) {
+        try {
+            WebSocketResult webSocketResult = new WebSocketResult(ServerConstants.APP, ResponseCode.SUCCESS.getCode(), message);
+            String responseContent = MAPPER.writeValueAsString(webSocketResult);
+            MessageSender.sendLocalMessage(ctx, responseContent);
+        } catch (JsonProcessingException e) {
+            // do nothing
+        }
+    }
+
+
+    /**
+     * 异常响应
+     */
+    public static void errorResponse(ChannelHandlerContext ctx, String error) {
+        try {
+            WebSocketResult webSocketResult = new WebSocketResult(ServerConstants.APP, ResponseCode.EXCEPTION.getCode(), error);
+            String responseContent = MAPPER.writeValueAsString(webSocketResult);
+            MessageSender.sendLocalMessage(ctx, responseContent);
+        } catch (JsonProcessingException e) {
+            // do nothing
+        }
+    }
+
 
 }

@@ -1,15 +1,15 @@
-package lazecoding.keeper.model;
+package lazecoding.keeper.plugins.batch;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 /**
- * 响应模型，如：{"type":"M","content":"1","timestamp":1637645936927}
+ * 批量响应模型，如：{"type":"M","content":"1","timestamp":1637645936927}
  *
  * @author lazecoding
  */
-public class ResponseModel implements Serializable  {
+public class BatchResponseModel implements Serializable  {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class ResponseModel implements Serializable  {
      */
     private long timestamp = 0L;
 
-    public ResponseModel(String type, Object content) {
+    public BatchResponseModel(String type, Object content) {
         this.type = type;
         this.content = content;
         this.timestamp = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();

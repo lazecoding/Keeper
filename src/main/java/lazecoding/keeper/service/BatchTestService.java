@@ -2,7 +2,7 @@ package lazecoding.keeper.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import lazecoding.keeper.constant.RequestType;
-import lazecoding.keeper.model.ResponseModel;
+import lazecoding.keeper.plugins.batch.BatchResponseModel;
 import lazecoding.keeper.plugins.batch.BatchRequestBean;
 import lazecoding.keeper.plugins.batch.BatchExecutor;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 public class BatchTestService implements ExecuteRequestService{
     @Override
     public void doRequest(ChannelHandlerContext ctx, String requestContext) {
-        ResponseModel responseModel = new ResponseModel(RequestType.T_1.getCode(), requestContext);
+        BatchResponseModel batchResponseModel = new BatchResponseModel(RequestType.T_1.getCode(), requestContext);
 
-        BatchExecutor.offer(new BatchRequestBean("111", responseModel).addResponseModel(responseModel).addResponseModel(responseModel));
+        BatchExecutor.offer(new BatchRequestBean("111", batchResponseModel).addResponseModel(batchResponseModel).addResponseModel(batchResponseModel));
     }
 }

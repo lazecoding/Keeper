@@ -61,9 +61,9 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                 // 使用方式 value = queryParams.get(key).get(0)
                 MultiValueMap<String, String> queryParams = uriComponents.getQueryParams();
 
-                String accessToken;
-                if (!queryParams.containsKey(QueryKeys.AT.name())
-                        || StringUtils.isEmpty(accessToken = queryParams.get(QueryKeys.AT.name()).get(DigitalConstant.ZERO))) {
+                String userId;
+                if (!queryParams.containsKey(QueryKeys.U.name())
+                        || !StringUtils.hasText(userId = queryParams.get(QueryKeys.U.name()).get(DigitalConstant.ZERO))) {
                     ctx.close();
                     return;
                 }
@@ -71,18 +71,17 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                 String channelId = ChannelUtil.getChannelId(ctx);
                 GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
 
-                // 该 channelId 和哪个 accessToken 绑定
-                GroupContainer.CHANNEL_USER.put(channelId, accessToken);
+                // 该 channelId 和哪个 userId 绑定
+                GroupContainer.CHANNEL_USER.put(channelId, userId);
 
-                // 该 accessToken 绑定了哪些 channelId
-                CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.putIfAbsent(accessToken, new CopyOnWriteArraySet<>());
+                // 该 userId 绑定了哪些 channelId
+                CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.putIfAbsent(userId, new CopyOnWriteArraySet<>());
                 if (channelSet == null) {
-                    channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
+                    channelSet = GroupContainer.USER_CHANNEL.get(userId);
                 }
                 channelSet.add(channelId);
 
                 // 处理参数列表
-                // 启用 用户 模块
                 // 重新设置 WebSocket Path
                 request.setUri(Config.contextPath);
             }
@@ -116,10 +115,10 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
 
         if (GroupContainer.CHANNEL_USER.containsKey(channelId)) {
             // 删除正向关系
-            String accessToken = GroupContainer.CHANNEL_USER.get(channelId);
+            String userId = GroupContainer.CHANNEL_USER.get(channelId);
             GroupContainer.CHANNEL_USER.remove(channelId);
             // 删除反向关系
-            CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(accessToken);
+            CopyOnWriteArraySet<String> channelSet = GroupContainer.USER_CHANNEL.get(userId);
             if (!CollectionUtils.isEmpty(channelSet)) {
                 channelSet.remove(channelId);
             }
