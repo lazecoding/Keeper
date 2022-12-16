@@ -24,6 +24,8 @@ public class AmqpOperator {
 
     private final ConnectionFactory connectionFactory = BeanUtil.getBean(ConnectionFactory.class);
 
+    private final static AmqpOperator AMQP_OPERATOR = new AmqpOperator();
+
     /**
      * 默认批量消费一次的数量
      */
@@ -35,7 +37,7 @@ public class AmqpOperator {
     private static final int DEFAULT_CONSUMER_NUM = 1;
 
     public static AmqpOperator getInstance() {
-        return new AmqpOperator();
+        return AMQP_OPERATOR;
     }
 
     public void queueBinding(AbstractExchange exchange, Queue queue, String route) {
