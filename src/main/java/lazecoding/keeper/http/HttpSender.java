@@ -57,6 +57,7 @@ public class HttpSender {
             String objJson = MAPPER.writeValueAsString(webSocketResult);
             // 推送给客户端
             MessageSender.sendLocalMessageToUser(userIdList, objJson);
+            isSuccess = true;
         } catch (NilParamException e) {
             isSuccess = false;
             message = e.getMessage();
@@ -96,6 +97,7 @@ public class HttpSender {
             String objJson = MAPPER.writeValueAsString(webSocketResult);
             // 推送给客户端
             MessageSender.sendLocalMessageForBroadcast(objJson);
+            isSuccess = true;
         } catch (Exception e) {
             isSuccess = false;
             message = "系统异常";
