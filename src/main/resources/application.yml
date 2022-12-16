@@ -13,6 +13,14 @@ spring:
         max-idle: 16
         min-idle: 0
 
+amqp:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+
 server:
   port: 9988
   http:
