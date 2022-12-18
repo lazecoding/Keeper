@@ -2,8 +2,10 @@ package lazecoding.keeper.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
+import lazecoding.keeper.constant.AppsMqConstants;
 import lazecoding.keeper.model.ClientMessageBean;
 import lazecoding.keeper.model.WebSocketRequest;
+import lazecoding.keeper.util.amqp.AmqpOperator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -49,8 +51,8 @@ public class DispatchRequestAdapter {
         // 组织请求的更多属性
         ClientMessageBean clientMessageBean = new ClientMessageBean(app, event, request.getData(), userId);
         try {
-            System.out.println(clientMessageBean.toString());
-            // TODO 法送到 MQ，目标 app 的服务端消费
+            AmqpOperator amqpOperator = AmqpOperator.getInstance();
+            amqpOperator.sendJsonMessage(AppsMqConstants.exchange(), AppsMqConstants.queue(app), clientMessageBean);
             MessageSender.successResponse(ctx, "request send to app.");
         } catch (Exception e) {
             MessageSender.errorResponse(ctx, "request send to app exception.");

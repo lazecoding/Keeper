@@ -1,11 +1,10 @@
 package lazecoding.keeper.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lazecoding.keeper.component.MessageSender;
 import lazecoding.keeper.exception.NilParamException;
 import lazecoding.keeper.model.MessageBody;
 import lazecoding.keeper.model.ResultBean;
-import lazecoding.keeper.model.WebSocketResult;
+import lazecoding.keeper.service.WebSocketMessagePusher;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,13 +50,7 @@ public class HttpSender {
             // 表示由消息方组织的消息体
             MessageBody messageBody = new MessageBody(app, event, data);
             List<String> userIdList = Arrays.asList(userIds.split(","));
-            // TODO 中间经过 MQ 广播
-            // TODO 从 MQ 中收到了 messageBody，组织成 WebSocketResult，返回给客户端
-            WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
-            String objJson = MAPPER.writeValueAsString(webSocketResult);
-            // 推送给客户端
-            MessageSender.sendLocalMessageToUser(userIdList, objJson);
-            isSuccess = true;
+            isSuccess = WebSocketMessagePusher.send(messageBody, userIdList);
         } catch (NilParamException e) {
             isSuccess = false;
             message = e.getMessage();
@@ -91,13 +84,7 @@ public class HttpSender {
         try {
             // data = StringEscapeUtils.unescapeHtml(data);
             MessageBody messageBody = new MessageBody(app, event, data);
-            // TODO 中间经过 MQ 广播
-            // TODO 从 MQ 中收到了 messageBody，组织成 WebSocketResult，返回给客户端
-            WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
-            String objJson = MAPPER.writeValueAsString(webSocketResult);
-            // 推送给客户端
-            MessageSender.sendLocalMessageForBroadcast(objJson);
-            isSuccess = true;
+            isSuccess = WebSocketMessagePusher.sendAll(messageBody);
         } catch (Exception e) {
             isSuccess = false;
             message = "系统异常";

@@ -26,6 +26,10 @@ public class KeeperStartupRunner implements ApplicationRunner {
 
             // 1.启动 WebSocket Server
             Server.start();
+
+            // 2. MQ
+            MqListener.init();
+
         } catch (Exception e) {
             logger.error("ApplicationRunner Exception", e);
         }
