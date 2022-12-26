@@ -13,7 +13,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 /**
- * WebSocketMessagePusher
+ * WebSocketMessagePusher （作为 RPC 方法类）
  *
  * @author lazecoding
  */
@@ -30,13 +30,12 @@ public class WebSocketMessagePusher {
         }
         AmqpOperator amqpOperator = AmqpOperator.getInstance();
         try {
-            // 服务端通信提供 RPC 一般，本处跳过
             WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
             String objJson = MAPPER.writeValueAsString(webSocketResult);
             // 组织 WebSocketMqMessageBean
             WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, userIds, Boolean.FALSE);
             amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -51,13 +50,12 @@ public class WebSocketMessagePusher {
         }
         AmqpOperator amqpOperator = AmqpOperator.getInstance();
         try {
-            // 服务端通信提供 RPC 一般，本处跳过
             WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
             String objJson = MAPPER.writeValueAsString(webSocketResult);
             // 组织 WebSocketMqMessageBean
             WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, null, Boolean.TRUE);
             amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
