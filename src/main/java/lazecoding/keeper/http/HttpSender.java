@@ -1,6 +1,5 @@
 package lazecoding.keeper.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lazecoding.keeper.exception.NilParamException;
 import lazecoding.keeper.model.MessageBody;
 import lazecoding.keeper.model.ResultBean;
@@ -20,8 +19,6 @@ import java.util.List;
 @Controller
 @RequestMapping("interface/sender")
 public class HttpSender {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 指定用户推送
