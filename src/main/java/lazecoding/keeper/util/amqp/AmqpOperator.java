@@ -11,6 +11,8 @@ import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Properties;
+
 /**
  * AmqpOperator
  *
@@ -121,6 +123,48 @@ public class AmqpOperator {
             throw new MessageSendException("AmqpMessage.createJsonMessage result is nil");
         }
         rabbitTemplate.convertAndSend(exchange, routingKey, jsonMessage);
+    }
+
+    /**
+     * 删除 queue
+     */
+    public boolean deleteQueue(String queueName) {
+        return rabbitAdmin.deleteQueue(queueName);
+    }
+
+    /**
+     * 清除 queue 中消息
+     */
+    public int purgeQueue(String queueName) {
+        return rabbitAdmin.purgeQueue(queueName);
+    }
+
+    /**
+     * 删除 binding
+     */
+    public void removeBinding(Binding binding) {
+        rabbitAdmin.removeBinding(binding);
+    }
+
+    /**
+     * 删除 exchange
+     */
+    public boolean deleteExchange(String exchangeName) {
+        return rabbitAdmin.deleteExchange(exchangeName);
+    }
+
+    /**
+     * 获取 Properties
+     */
+    public Properties getQueueProperties(String queueName) {
+        return rabbitAdmin.getQueueProperties(queueName);
+    }
+
+    /**
+     * 获取 QueueInformation
+     */
+    public QueueInformation getQueueInfo(String queueName) {
+        return rabbitAdmin.getQueueInfo(queueName);
     }
 
 }
