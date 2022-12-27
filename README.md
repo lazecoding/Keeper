@@ -1,8 +1,8 @@
 # Keeper release-2.0.0
 
-待施工...........
+统一 WebSocket 接入服务。
 
-分布式 WebSocket 服务器。
+客户端、服务端统一接入 Keeper，服务端通过 Keeper RPC 推送消息给客户端，客户端亦可通过 Keeper WebSocket 向服务端推送消息，而 Keepr 则通过 MQ 和其他服务通信。 
 
 ### 架构
 
