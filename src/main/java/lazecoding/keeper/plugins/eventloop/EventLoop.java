@@ -1,6 +1,7 @@
 package lazecoding.keeper.plugins.eventloop;
 
 import lazecoding.keeper.task.OnlineChannelTask;
+import lazecoding.keeper.task.ServerKeepTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,8 @@ public class EventLoop {
     private static void doLoop() {
         // 在线用户
         OnlineChannelTask.getInstance().registerTask();
-
+        // 服务保活
+        ServerKeepTask.getInstance().registerTask();
     }
 
 }

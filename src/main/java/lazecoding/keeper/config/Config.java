@@ -45,15 +45,6 @@ public class Config {
      */
     public static String hearBeatCycle = "15";
 
-    /**
-     * 是否启用周期事件处理器
-     */
-    public static boolean enableEventLoop = Boolean.FALSE;
-
-    /**
-     * 周期事件处理器执行间隔时间，单位: s/秒。
-     */
-    public static String eventLoopCycle = "15";
 
 
     public static String getString() {
@@ -67,8 +58,6 @@ public class Config {
                 "\n" +
                 "  enableHearBeat='" + enableHearBeat + "'" +
                 ", hearBeatCycle='" + hearBeatCycle + "'" +
-                ", enableEventLoop='" + enableEventLoop + "'" +
-                ", eventLoopCycle='" + eventLoopCycle + "'" +
                 "\n}";
     }
 

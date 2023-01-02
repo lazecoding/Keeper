@@ -27,17 +27,6 @@ project:
     hearBeatCycle: 15
 ```
 
-#### 事件周期处理
-
-`project.plugin-config.enableEventLoop` 属性决定是否启用 `事件周期处理` 模块，`project.plugin-config.eventLoopCycle` 控制事件处理周期间隔时长，单位 s/秒。
-
-```yaml
-project:
-  plugin-config:
-    enableEventLoop: false
-    eventLoopCycle: 15
-```
-
 ### 环境配置需求
 
 #### ulimit -n

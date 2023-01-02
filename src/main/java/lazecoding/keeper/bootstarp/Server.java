@@ -56,8 +56,6 @@ public class Server {
         if (pluginInfo != null) {
             Config.enableHearBeat = pluginInfo.getEnableHearBeat();
             Config.hearBeatCycle = pluginInfo.getHearBeatCycle();
-            Config.enableEventLoop = pluginInfo.getEnableEventLoop();
-            Config.eventLoopCycle = pluginInfo.getEventLoopCycle();
         }
 
         // 初始化 uid

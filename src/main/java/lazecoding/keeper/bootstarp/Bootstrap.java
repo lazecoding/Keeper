@@ -16,13 +16,16 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import lazecoding.keeper.config.Config;
+import lazecoding.keeper.constant.CacheConstants;
 import lazecoding.keeper.hander.DefaultSessionHandler;
 import lazecoding.keeper.hander.IncomingRequestHandler;
 import lazecoding.keeper.plugins.eventloop.EventLoop;
 import lazecoding.keeper.plugins.hearbeat.DefaultHearBeatHandler;
+import lazecoding.keeper.util.RedisTemplateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * Internal startup code.
@@ -95,10 +98,13 @@ public class Bootstrap {
             Channel channel = serverBootstrap.bind(Integer.parseInt(Config.serverPort)).sync().channel();
             logger.info("Connection is opened ... port:{}  contextPath:{}", Config.serverPort, Config.contextPath);
 
+            // 注册服务
+            RedisTemplate redisTemplate = RedisTemplateUtil.getRedisTemplate();
+            redisTemplate.opsForValue().set(CacheConstants.SERVER_KEEP.getName() + Config.uid, "", CacheConstants.SERVER_KEEP.getTtl(), CacheConstants.SERVER_KEEP.getTimeUnit());
+            redisTemplate.opsForSet().add(CacheConstants.SERVER_KEEP_SET.getName(), Config.uid);
+
             // 注册周期事件处理器
-            if (Config.enableEventLoop) {
-                EventLoop.doRegister();
-            }
+            EventLoop.doRegister();
 
             // Wait until the connection is closed.
             channel.closeFuture().sync();
@@ -110,9 +116,7 @@ public class Bootstrap {
             // 服务器关闭后，释放资源
             boss.shutdownGracefully();
             worker.shutdownGracefully();
-            if (Config.enableEventLoop) {
-                EventLoop.cancel();
-            }
+            EventLoop.cancel();
         }
     }
 
