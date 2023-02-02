@@ -8,9 +8,19 @@
 
 本项目基于 Netty 开发，继承 Netty 架构并进一步扩展。
 
+<div align="left">
+    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper架构图.png" width="800px">
+</div>
+
 特点：
 
 - Boss 线程、IO 线程、业务线程分离。
+
+与其他系统交互图：
+
+<div align="left">
+    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper与其他系统交互图.png" width="800px">
+</div>
 
 ### 插件
 
