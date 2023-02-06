@@ -109,8 +109,8 @@ public class Bootstrap {
             // Wait until the connection is closed.
             channel.closeFuture().sync();
             logger.info("Connection is closed.");
-        } catch (InterruptedException e) {
-            logger.error("Bootstrap doStart Exception:{}.", e.getCause().toString());
+        } catch (Exception e) {
+            logger.error("Bootstrap doStart Exception", e);
             throw new Error("Server Disconnected");
         } finally {
             // 服务器关闭后，释放资源
