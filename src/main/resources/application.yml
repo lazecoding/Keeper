@@ -2,16 +2,21 @@ spring:
   application:
     name: Keeper
   redis:
-    host: 192.168.83.22
-    port: 6379
+    enableCluster: false
     password:
-    database: 11
-    lettuce:
-      pool:
-        max-active: 16
-        max-wait: 3000ms
-        max-idle: 16
-        min-idle: 0
+    connectionTimeout: 29999
+    cluster:
+      nodeAddresses: [
+        "redis://127.0.0.1:7005",
+        "redis://127.0.0.1:7004",
+        "redis://127.0.0.1:7003",
+        "redis://127.0.0.1:7002",
+        "redis://127.0.0.1:7001",
+        "redis://127.0.0.1:7000"
+      ]
+    single:
+      address: "redis://127.0.0.1:6379"
+      database: 7
 
 amqp:
   rabbitmq:
@@ -45,7 +50,3 @@ project:
     enableHearBeat: false
     # 设置心跳周期，单位 S
     hearBeatCycle: 15
-    # 开启事件循环
-    enableEventLoop: false
-    # 设置事件循环周期，单位 S
-    eventLoopCycle: 15

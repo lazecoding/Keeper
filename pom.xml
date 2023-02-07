@@ -17,6 +17,7 @@
         <java.version>11</java.version>
         <netty.version>4.1.84.Final</netty.version>
         <jackson.version>2.11.2</jackson.version>
+        <redisson.version>3.18.1</redisson.version>
     </properties>
     <dependencies>
         <dependency>
@@ -43,15 +44,17 @@
             <version>${netty.version}</version>
         </dependency>
 
-        <!-- 配置 Redis 启动器 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!-- redisson -->
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
         </dependency>
 
         <!--Jackson包-->
