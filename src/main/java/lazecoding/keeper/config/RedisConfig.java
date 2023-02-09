@@ -1,5 +1,6 @@
 package lazecoding.keeper.config;
 
+import lazecoding.keeper.constant.RedissonWorkerConstants;
 import org.redisson.Redisson;
 import org.redisson.RedissonNode;
 import org.redisson.api.RedissonClient;
@@ -58,7 +59,8 @@ public class RedisConfig {
 
         // init node worker : 使用 ExecutorService 准备
         RedissonNodeConfig nodeConfig = new RedissonNodeConfig(config);
-        Map<String, Integer> workers = Collections.singletonMap("Default_Executor_Service", 3);
+        Map<String, Integer> workers = Collections.singletonMap(RedissonWorkerConstants.DEFAULT_EXECUTOR_SERVICE.getName()
+                , RedissonWorkerConstants.DEFAULT_EXECUTOR_SERVICE.getSize());
         nodeConfig.setExecutorServiceWorkers(workers);
         RedissonNode node = RedissonNode.create(nodeConfig);
         node.start();

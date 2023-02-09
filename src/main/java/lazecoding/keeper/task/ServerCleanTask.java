@@ -1,5 +1,8 @@
 package lazecoding.keeper.task;
 
+import lazecoding.keeper.service.ServerKeepService;
+import lazecoding.keeper.util.BeanUtil;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +16,7 @@ public class ServerCleanTask implements Runnable, Serializable {
 
     @Override
     public void run() {
-        System.out.println("RScheduledExecutorService doRunnable " + System.currentTimeMillis());
+        ServerKeepService serverKeepService = BeanUtil.getBean(ServerKeepService.class);
+        serverKeepService.clean();
     }
 }
