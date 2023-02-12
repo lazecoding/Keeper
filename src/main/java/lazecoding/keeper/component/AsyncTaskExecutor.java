@@ -3,9 +3,7 @@ package lazecoding.keeper.component;
 import io.netty.util.NettyRuntime;
 import lazecoding.keeper.constant.DigitalConstant;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 异步任务执行器
@@ -37,10 +35,35 @@ public class AsyncTaskExecutor {
             }, new ThreadPoolExecutor.AbortPolicy());
 
     /**
+     * 延迟任务执行器
+     */
+    private static final ScheduledExecutorService DELAY_EXECUTOR = new ScheduledThreadPoolExecutor(CORE_NUM, runnable -> {
+        Thread thread = new Thread(runnable);
+        thread.setName("延迟任务执行器");
+        thread.setDaemon(true);
+        return thread;
+    }, new ThreadPoolExecutor.AbortPolicy());
+
+    /**
      * 提交任务
      **/
     public static void submitTask(Runnable task) {
         ASYNC_EXECUTOR.execute(task);
+    }
+
+    /**
+     * 延迟队列
+     *
+     * @param task      待执行任务
+     * @param delayTime 延迟时间（单位/s）
+     */
+    public static void submitDelayTask(Runnable task, Long delayTime) {
+        DELAY_EXECUTOR.schedule(new Runnable() {
+            @Override
+            public void run() {
+                task.run();
+            }
+        }, delayTime, TimeUnit.SECONDS);
     }
 
 }
