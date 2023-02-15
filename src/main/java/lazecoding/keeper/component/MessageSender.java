@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lazecoding.keeper.config.Config;
 import lazecoding.keeper.constant.DigitalConstant;
 import lazecoding.keeper.constant.ResponseCode;
 import lazecoding.keeper.constant.ServerConstants;
@@ -50,9 +51,10 @@ public class MessageSender {
     private static boolean sendLocalMessage(ChannelHandlerContext ctx, String message, int retry) {
         try {
             ChannelFuture channelFuture = ctx.channel().writeAndFlush(new TextWebSocketFrame(message));
-            retry++;
-            ResendBean resendBean = new ResendBean(ctx, message, retry);
-            if (retry <= 10) {
+            // 开启重推且未达到重推次数上限
+            if (Config.enableResend && (retry <= Config.maxResendTime || Config.maxResendTime < 0)) {
+                retry++;
+                ResendBean resendBean = new ResendBean(ctx, message, retry);
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture channelFuture) throws Exception {
@@ -61,7 +63,7 @@ public class MessageSender {
                             AsyncTaskExecutor.submitDelayTask(() -> {
                                 MessageSender.sendLocalMessage(resendBean.getCtx(), resendBean.getContent(), resendBean.getRetry());
                                 System.out.println("AsyncTaskExecutor.submitDelayTask ResendBean retry:" + resendBean.getRetry() + " time:" + System.currentTimeMillis() + " content:" + resendBean.getContent());
-                            }, 3L);
+                            }, Config.resendCycle);
                         }
                     }
                 });

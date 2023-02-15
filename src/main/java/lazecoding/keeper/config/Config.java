@@ -45,7 +45,20 @@ public class Config {
      */
     public static String hearBeatCycle = "15";
 
+    /**
+     * 是否开启消息重推
+     */
+    public static Boolean enableResend = Boolean.FALSE;
 
+    /**
+     * 重推次数,< 0 代表无限次
+     */
+    public static int maxResendTime = 3;
+
+    /**
+     * 重推间隔 单位/s
+     */
+    public static long resendCycle = 5L;
 
     public static String getString() {
         return "ServerConfig {\n" +
@@ -58,6 +71,9 @@ public class Config {
                 "\n" +
                 "  enableHearBeat='" + enableHearBeat + "'" +
                 ", hearBeatCycle='" + hearBeatCycle + "'" +
+                ", enableResend='" + enableResend + "'" +
+                ", maxResendTime='" + maxResendTime + "'" +
+                ", resendCycle='" + resendCycle + "'" +
                 "\n}";
     }
 

@@ -50,3 +50,9 @@ project:
     enableHearBeat: false
     # 设置心跳周期，单位 S
     hearBeatCycle: 15
+    # 开启消息重推
+    enableResend: false
+    # 重推次数
+    resendTime: 2
+    # 重推周期 单位/s
+    resendCycle: 3
