@@ -22,16 +22,6 @@ public class PluginInfo {
      */
     private String hearBeatCycle = "";
 
-    /**
-     * 是否启用周期事件处理器
-     */
-    private Boolean enableEventLoop = Boolean.FALSE;
-
-    /**
-     * 周期事件处理器执行间隔时间，单位: s/秒。
-     */
-    private String eventLoopCycle = "";
-
 
     public Boolean getEnableHearBeat() {
         return enableHearBeat;
@@ -47,22 +37,6 @@ public class PluginInfo {
 
     public void setHearBeatCycle(String hearBeatCycle) {
         this.hearBeatCycle = hearBeatCycle;
-    }
-
-    public Boolean getEnableEventLoop() {
-        return enableEventLoop;
-    }
-
-    public void setEnableEventLoop(Boolean enableEventLoop) {
-        this.enableEventLoop = enableEventLoop;
-    }
-
-    public String getEventLoopCycle() {
-        return eventLoopCycle;
-    }
-
-    public void setEventLoopCycle(String eventLoopCycle) {
-        this.eventLoopCycle = eventLoopCycle;
     }
 
 }
