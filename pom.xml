@@ -15,7 +15,7 @@
     <description>Distributed WebSocket Server</description>
     <properties>
         <java.version>11</java.version>
-        <netty.version>4.1.84.Final</netty.version>
+        <netty.version>4.1.89.Final</netty.version>
         <jackson.version>2.11.2</jackson.version>
         <redisson.version>3.18.1</redisson.version>
     </properties>
