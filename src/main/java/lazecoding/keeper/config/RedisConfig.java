@@ -39,12 +39,15 @@ public class RedisConfig {
             connectionTimeoutConfig = RedisConfigProperties.DefaultConfig.connectionTimeout;
         }
         int connectionTimeout = Integer.parseInt(connectionTimeoutConfig);
+        String passwordConfig = redisConfigProperties.getPassword();
         if (enableCluster) {
             List<String> clusterNodes = redisConfigProperties.getCluster().getNodeAddresses();
             ClusterServersConfig clusterServersConfig = config.useClusterServers()
                     .addNodeAddress(clusterNodes.toArray(new String[clusterNodes.size()]));
             //设置密码
-            clusterServersConfig.setPassword(redisConfigProperties.getPassword());
+            if (StringUtils.hasText(passwordConfig)) {
+                clusterServersConfig.setPassword(passwordConfig);
+            }
             //redis连接心跳检测，防止一段时间过后，与redis的连接断开
             clusterServersConfig.setPingConnectionInterval(connectionTimeout);
         } else {
@@ -52,7 +55,9 @@ public class RedisConfig {
                     .setAddress(redisConfigProperties.getSingle().getAddress())
                     .setDatabase(redisConfigProperties.getSingle().getDatabase());
             //设置密码
-            singleServerConfig.setPassword(redisConfigProperties.getPassword());
+            if (StringUtils.hasText(passwordConfig)) {
+                singleServerConfig.setPassword(passwordConfig);
+            }
             //redis连接心跳检测，防止一段时间过后，与redis的连接断开
             singleServerConfig.setPingConnectionInterval(connectionTimeout);
         }
