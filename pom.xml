@@ -10,7 +10,7 @@
     </parent>
     <groupId>lazecoding</groupId>
     <artifactId>keeper</artifactId>
-    <version>release-2.0.0</version>
+    <version>release-2.1.0</version>
     <name>Keeper</name>
     <description>Distributed WebSocket Server</description>
     <properties>

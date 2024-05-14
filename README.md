@@ -1,8 +1,10 @@
-# Keeper release-2.0.0
+# Keeper release-2.1.0
 
 统一 WebSocket 接入服务。
 
 客户端、服务端统一接入 Keeper，服务端通过 Keeper RPC 推送消息给客户端，客户端亦可通过 Keeper WebSocket 向服务端推送消息，而 Keepr 则通过 MQ 和其他服务通信。 
+
+提供 SSE 支持，和 WebSocket 数据同源，可并行使用。
 
 ### 架构
 
