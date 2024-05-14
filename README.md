@@ -9,7 +9,7 @@
 本项目基于 Netty 开发，继承 Netty 架构并进一步扩展。
 
 <div align="left">
-    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper架构图.png" width="800px">
+    <img src="https://github.com/lazecoding/Keeper/blob/release-2.0.0/src/main/resources/static/image/Keeper架构图.png" width="800px">
 </div>
 
 特点：
@@ -19,7 +19,7 @@
 与其他系统交互图：
 
 <div align="left">
-    <img src="https://github.com/lazecoding/Keeper/blob/main/src/main/resources/static/image/Keeper与其他系统交互图.png" width="800px">
+    <img src="https://github.com/lazecoding/Keeper/blob/release-2.0.0/src/main/resources/static/image/Keeper与其他系统交互图.png" width="800px">
 </div>
 
 ### 插件
@@ -154,4 +154,4 @@ WebSocket 中断需要重连，切记保持重连间隔时间，比如重连失�
 
 ## License
 
-Keeper software is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/lazecoding/Keeper/blob/main/LICENSE) file for details.
+Keeper software is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/lazecoding/Keeper/blob/release-2.0.0/LICENSE) file for details.
