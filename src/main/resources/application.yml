@@ -3,7 +3,7 @@ spring:
     name: Keeper
   redis:
     enableCluster: false
-    password: lanredis
+    password:
     connectionTimeout: 29999
     cluster:
       nodeAddresses: [
@@ -45,6 +45,8 @@ project:
     httpObjectLength:
     # TCP 全队列大小
     soBacklog: 2048
+    # 是否启用集群
+    enableCluster: false
   plugin-config:
     # 开启心跳
     enableHearBeat: false

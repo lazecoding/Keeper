@@ -1,6 +1,9 @@
 package lazecoding.keeper.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lazecoding.keeper.component.MessageSender;
+import lazecoding.keeper.component.SseSender;
+import lazecoding.keeper.config.Config;
 import lazecoding.keeper.constant.MqConstants;
 import lazecoding.keeper.model.MessageBody;
 import lazecoding.keeper.model.WebSocketMqMessageBean;
@@ -31,9 +34,15 @@ public class WebSocketMessagePusher {
         try {
             WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
             String objJson = MAPPER.writeValueAsString(webSocketResult);
-            // 组织 WebSocketMqMessageBean
-            WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, userIds, Boolean.FALSE);
-            amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
+            if (Config.enableCluster) {
+                // 组织 WebSocketMqMessageBean
+                WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, userIds, Boolean.FALSE);
+                amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
+            } else {
+                // 指定用户
+                MessageSender.sendLocalMessageToUser(userIds, objJson);
+                SseSender.sendLocalMessageToUser(userIds, objJson);
+            }
         } catch (Exception e) {
             return false;
         }
@@ -51,9 +60,14 @@ public class WebSocketMessagePusher {
         try {
             WebSocketResult webSocketResult = new WebSocketResult(messageBody.getApp(), messageBody.getEvent(), messageBody.getData(), messageBody.getTraceId());
             String objJson = MAPPER.writeValueAsString(webSocketResult);
-            // 组织 WebSocketMqMessageBean
-            WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, null, Boolean.TRUE);
-            amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
+            if (Config.enableCluster) {
+                // 组织 WebSocketMqMessageBean
+                WebSocketMqMessageBean webSocketMqMessageBean = new WebSocketMqMessageBean(objJson, null, Boolean.TRUE);
+                amqpOperator.sendJsonMessage(MqConstants.WEBSOCKET_MESSAGE.getExchange(), MqConstants.WEBSOCKET_MESSAGE.getRoute(), webSocketMqMessageBean);
+            } else {
+                MessageSender.sendLocalMessageForBroadcast(objJson);
+                SseSender.sendLocalMessageForBroadcast(objJson);
+            }
         } catch (Exception e) {
             return false;
         }

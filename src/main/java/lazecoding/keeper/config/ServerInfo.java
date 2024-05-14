@@ -32,6 +32,11 @@ public class ServerInfo {
      */
     private String soBacklog = "";
 
+    /**
+     * 是否启用集群
+     */
+    private Boolean enableCluster = Boolean.FALSE;
+
     public String getContextPath() {
         return contextPath;
     }
@@ -64,5 +69,12 @@ public class ServerInfo {
         this.soBacklog = soBacklog;
     }
 
+    public Boolean getEnableCluster() {
+        return enableCluster;
+    }
+
+    public void setEnableCluster(Boolean enableCluster) {
+        this.enableCluster = enableCluster;
+    }
 }
 

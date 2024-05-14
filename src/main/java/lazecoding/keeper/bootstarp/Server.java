@@ -50,6 +50,7 @@ public class Server {
             if (StringUtils.hasText(serverInfo.getSoBacklog())) {
                 Config.soBacklog = serverInfo.getSoBacklog();
             }
+            Config.enableCluster = serverInfo.getEnableCluster();
         }
 
         // 初始化 plugin-config

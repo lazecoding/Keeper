@@ -60,6 +60,11 @@ public class Config {
      */
     public static long resendCycle = 5L;
 
+    /**
+     * 是否启用集群
+     */
+    public static boolean enableCluster = Boolean.FALSE;
+
     public static String getString() {
         return "ServerConfig {\n" +
                 "  uid='" + uid + "'" +
