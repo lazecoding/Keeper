@@ -3,6 +3,7 @@ package lazecoding.keeper.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import lazecoding.keeper.component.MessageSender;
+import lazecoding.keeper.component.SseSender;
 import lazecoding.keeper.config.Config;
 import lazecoding.keeper.constant.MqConstants;
 import lazecoding.keeper.model.WebSocketMqMessageBean;
@@ -53,9 +54,11 @@ public class MqListener {
                     if (messageBean.getBroadcast()) {
                         // 广播
                         MessageSender.sendLocalMessageForBroadcast(messageBean.getMessage());
+                        SseSender.sendLocalMessageForBroadcast(messageBean.getMessage());
                     } else {
                         // 指定用户
                         MessageSender.sendLocalMessageToUser(messageBean.getUserIds(), messageBean.getMessage());
+                        SseSender.sendLocalMessageToUser(messageBean.getUserIds(), messageBean.getMessage());
                     }
                 }
             }
