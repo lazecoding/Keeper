@@ -8,6 +8,8 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * AmqpMessage
  *
@@ -40,7 +42,7 @@ public class AmqpMessage extends Message {
         JsonMessage jsonMessage = null;
         if (StringUtils.hasText(value)) {
             try {
-                bytes = value.getBytes("utf-8");
+                bytes = value.getBytes(StandardCharsets.UTF_8);
                 jsonMessage = new JsonMessage(bytes);
             } catch (Exception e) {
                 logger.error("create JsonMessage error", e);
@@ -49,25 +51,12 @@ public class AmqpMessage extends Message {
         return jsonMessage;
     }
 
-    /**
-     * @param key
-     * @param value
-     * @Description 添加属性（header）
-     * @author 李杰
-     * @date 2019年5月8日下午6:01:41
-     */
+
     public void addProperty(String key, Object value) {
         this.getMessageProperties().setHeader(key, value);
     }
 
-    /**
-     * @param <T>
-     * @param key
-     * @return
-     * @Description 获得属性（header）
-     * @author 李杰
-     * @date 2019年5月8日下午7:58:45
-     */
+
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {
         return (T) this.getMessageProperties().getHeaders().get(key);
