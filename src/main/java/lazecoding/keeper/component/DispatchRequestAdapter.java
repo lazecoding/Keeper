@@ -51,8 +51,7 @@ public class DispatchRequestAdapter {
         // 组织请求的更多属性
         ClientMessageBean clientMessageBean = new ClientMessageBean(app, event, request.getData(), userId);
         try {
-            AmqpOperator amqpOperator = AmqpOperator.getInstance();
-            amqpOperator.sendJsonMessage(AppsMqConstants.exchange(), AppsMqConstants.queue(app), clientMessageBean);
+            ClientMessageSender.sendClientMessage(clientMessageBean);
             MessageSender.successResponse(ctx, "request send to app.");
         } catch (Exception e) {
             MessageSender.errorResponse(ctx, "request send to app exception.");
