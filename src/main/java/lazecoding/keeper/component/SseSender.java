@@ -28,7 +28,9 @@ public class SseSender {
         }
         boolean isSuccess = false;
         try {
-            emitter.send(message);
+            SseEmitter.SseEventBuilder builder = SseEmitter.event().data(message);
+            emitter.send(builder);
+            isSuccess = true;
         } catch (Exception e) {
             // 异常
         }
