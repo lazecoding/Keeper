@@ -1,5 +1,6 @@
 package lazecoding.keeper.component;
 
+import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -28,7 +29,7 @@ public class SseSender {
         }
         boolean isSuccess = false;
         try {
-            SseEmitter.SseEventBuilder builder = SseEmitter.event().data(message);
+            SseEmitter.SseEventBuilder builder = SseEmitter.event().data(message, MediaType.APPLICATION_JSON);
             emitter.send(builder);
             isSuccess = true;
         } catch (Exception e) {
