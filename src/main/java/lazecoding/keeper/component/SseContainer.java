@@ -48,7 +48,7 @@ public class SseContainer {
             return null;
         }
         String sseId = System.currentTimeMillis() + "-" + UUIDUtil.getUUID();
-        SseEmitter emitter = new SseEmitter(0L);
+        SseEmitter emitter = new SseEmitterUTF8(0L);
 
         SSE_EMITTER.put(sseId, emitter);
         SSE_USER.put(sseId, userId);
