@@ -1,11 +1,13 @@
 package lazecoding.keeper.component;
 
 import lazecoding.keeper.util.UUIDUtil;
+import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,16 @@ public class SseContainer {
         emitter.onCompletion(() -> SseContainer.unregisterEmitter(sseId));
         emitter.onTimeout(() -> SseContainer.unregisterEmitter(sseId));
         emitter.onError((throwable) -> SseContainer.unregisterEmitter(sseId));
+        AsyncTaskExecutor.submitDelayTask(() -> {
+            try {
+                // 反馈客户端 sseId
+                SseEmitter.SseEventBuilder builder = SseEmitter.event()
+                        .name("SSE-Id").id(sseId).data(sseId, MediaType.APPLICATION_JSON);
+                emitter.send(builder);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }, 1L);
         return emitter;
     }
 
