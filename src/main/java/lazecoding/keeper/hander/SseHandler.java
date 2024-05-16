@@ -44,6 +44,27 @@ public class SseHandler {
         return SseContainer.registerEmitter(userId);
     }
 
+    /**
+     * 断开 SSE 连接
+     */
+    @GetMapping(path = "/close/{sseId}")
+    public ResultBean close(@PathVariable String sseId) {
+        if (ObjectUtils.isEmpty(sseId)) {
+            throw new NilParamException("sseId is nil");
+        }
+        ResultBean resultBean = ResultBean.getInstance();
+        SseEmitter emitter = SseContainer.SSE_EMITTER.get(sseId);
+        String message = "";
+        if (!ObjectUtils.isEmpty(emitter)) {
+            emitter.complete();
+            message = "断开链接";
+        } else {
+            message = "链接已断开";
+        }
+        resultBean.setMessage(message);
+        return resultBean;
+    }
+
 
     /**
      * 客户端推送消息

@@ -69,7 +69,7 @@ public class SseContainer {
             try {
                 // 反馈客户端 sseId
                 SseEmitter.SseEventBuilder builder = SseEmitter.event()
-                        .name("SSE-Id").id(sseId).data(sseId, MediaType.APPLICATION_JSON);
+                        .name("SSE-ID").id(sseId).data(sseId, MediaType.APPLICATION_JSON);
                 emitter.send(builder);
             } catch (IOException e) {
                 throw new RuntimeException(e);
