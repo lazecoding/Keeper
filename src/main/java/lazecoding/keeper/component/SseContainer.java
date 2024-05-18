@@ -1,5 +1,6 @@
 package lazecoding.keeper.component;
 
+import lazecoding.keeper.constant.SseCustomEvents;
 import lazecoding.keeper.util.UUIDUtil;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
@@ -69,7 +70,7 @@ public class SseContainer {
             try {
                 // 反馈客户端 sseId
                 SseEmitter.SseEventBuilder builder = SseEmitter.event()
-                        .name("SSE-ID").id(sseId).data(sseId, MediaType.APPLICATION_JSON);
+                        .name(SseCustomEvents.SSE_ID.getName()).id(sseId).data(sseId, MediaType.APPLICATION_JSON);
                 emitter.send(builder);
             } catch (IOException e) {
                 throw new RuntimeException(e);
