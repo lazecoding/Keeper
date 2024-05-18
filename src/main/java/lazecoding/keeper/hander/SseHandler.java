@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  *
  * @author lazecoding
  */
+@CrossOrigin
 @RestController()
 @RequestMapping("sse")
 public class SseHandler {
