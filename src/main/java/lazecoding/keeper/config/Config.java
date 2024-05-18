@@ -76,6 +76,8 @@ public class Config {
                 "\n" +
                 "  enableHearBeat='" + enableHearBeat + "'" +
                 ", hearBeatCycle='" + hearBeatCycle + "'" +
+                ", enableCluster='" + enableCluster + "', " +
+                "\n" +
                 ", enableResend='" + enableResend + "'" +
                 ", maxResendTime='" + maxResendTime + "'" +
                 ", resendCycle='" + resendCycle + "'" +
