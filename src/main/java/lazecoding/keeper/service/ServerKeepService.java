@@ -1,7 +1,9 @@
 package lazecoding.keeper.service;
 
 import lazecoding.keeper.constant.CacheConstants;
+import lazecoding.keeper.constant.MqConstants;
 import lazecoding.keeper.util.RedissonClientUtil;
+import lazecoding.keeper.util.amqp.AmqpOperator;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -41,8 +43,18 @@ public class ServerKeepService {
         if (CollectionUtils.isEmpty(needCleanIds)) {
             logger.debug("ServerKeepService : no server needs to be cleaned up.");
         } else {
+            AmqpOperator amqpOperator = AmqpOperator.getInstance();
             try {
-                needCleanIds.forEach(serverSets::remove);
+                needCleanIds.forEach(
+                        uid -> {
+                            String queueName = MqConstants.WEBSOCKET_MESSAGE.getQueue() + uid;
+                            boolean deleteQueueSuccess = amqpOperator.deleteQueue(queueName);
+                            logger.debug("ServerKeepService : delete queue queueName:[{}] success: [{}]", queueName, deleteQueueSuccess);
+                            if (deleteQueueSuccess) {
+                                serverSets.remove(uid);
+                            }
+                        }
+                );
             } catch (Exception e) {
                 logger.error("ServerKeepService : clean server exception.", e);
                 throw new RuntimeException(e);

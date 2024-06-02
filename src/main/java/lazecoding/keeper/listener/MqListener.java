@@ -36,7 +36,7 @@ public class MqListener {
     private static void handleWebSocketMessage() {
         String queueName = MqConstants.WEBSOCKET_MESSAGE.getQueue() + Config.uid;
         TopicExchange exchange = new TopicExchange(MqConstants.WEBSOCKET_MESSAGE.getExchange(), true, false);
-        Queue queue = new Queue(queueName, true, true, true);
+        Queue queue = new Queue(queueName, true, false, false);
         AmqpOperator amqpOperator = AmqpOperator.getInstance();
         amqpOperator.queueBinding(exchange, queue, MqConstants.WEBSOCKET_MESSAGE.getRoute());
         amqpOperator.registerListener(new ChannelAwareMessageListener() {
