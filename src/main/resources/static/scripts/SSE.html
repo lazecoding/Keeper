@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- @author lazecoding -->
+    <meta charset="UTF-8">
+    <title>SSE 客户端</title>
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 2px solid rgb(200, 200, 200);
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        td,
+        th {
+            border: 1px solid rgb(190, 190, 190);
+            padding: 10px 20px;
+        }
+
+        th {
+            background-color: rgb(235, 235, 235);
+        }
+
+        td {
+            text-align: center;
+        }
+
+        tr:nth-child(even) td {
+            background-color: rgb(250, 250, 250);
+        }
+
+        tr:nth-child(odd) td {
+            background-color: rgb(245, 245, 245);
+        }
+
+        caption {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        class SSEClient {
+            constructor(url) {
+                this.url = url;
+                this.eventSource = null;
+                this.sseId = null;
+            }
+
+            // 连接到服务器
+            connect() {
+                console.log("connect eventSource:", this.eventSource);
+                if (this.eventSource &&
+                    (this.eventSource.readyState === EventSource.OPEN || this.eventSource.readyState === EventSource.CONNECTING)) {
+                    alert("连接已开启，禁止重复创建");
+                    return;
+                }
+                this.eventSource = new EventSource(this.url);
+                console.log("connect new eventSource:", this.eventSource);
+                this.eventSource.addEventListener('message', this.onMessage.bind(this));
+                this.eventSource.addEventListener('error', this.onError.bind(this));
+                this.eventSource.addEventListener('SSE-ID', this.onSseId.bind(this));
+            }
+
+            // 处理收到的消息
+            onSseId(event) {
+                this.sseId = event.data;
+                console.log("SSEClient:", this);
+                // alert('初始化链接【' + this.sseId + '】完毕');
+                printMessage('初始化链接【' + this.sseId + '】完毕');
+
+            }
+
+            // 处理收到的消息
+            onMessage(event) {
+                console.log("onMessage event:", event)
+                const data = JSON.parse(event.data);
+                // alert('自定义消息:' + event.data);
+                printMessage('Message:' + event.data);
+            }
+
+            // 处理错误
+            onError(event) {
+                console.log("onError event:", event)
+                console.error('SSE connection error:', event);
+                printMessage("连接异常");
+                // 断开链接
+                this.disconnect();
+            }
+
+            // 断开链接
+            disconnect() {
+                if (this.eventSource) {
+                    this.eventSource.close();
+                    this.eventSource = null;
+                    printMessage("连接断开");
+                }
+            }
+        }
+
+        var sseClient;
+
+        // 建立连接
+        function content() {
+            // 使用示例
+
+            if (sseClient && sseClient.eventSource &&
+                (sseClient.eventSource.readyState === EventSource.OPEN || sseClient.eventSource.readyState === EventSource.CONNECTING)) {
+                alert("连接已开启，禁止重复创建");
+                return;
+            }
+
+            const contentUrl = document.getElementById("contentUrl").value;
+            sseClient = new SSEClient(contentUrl);
+            sseClient.connect();
+
+            // 监听自定义事件
+            document.addEventListener('customEvent', function (event) {
+                console.log('Custom event received:', event.detail);
+            });
+        }
+
+        // 关闭连接
+        function closed() {
+            console.log("sseClient:", sseClient);
+            //当websocket状态打开
+            if (sseClient == undefined || sseClient == null) {
+                // alert("连接没有开启");
+                printMessage("连接没有开启");
+                return;
+            }
+            // 断开链接
+            if (!sseClient.eventSource || sseClient.eventSource.readyState === EventSource.CLOSED) {
+                // alert("连接没有开启");
+                printMessage("连接没有开启");
+                return;
+            }
+            sseClient.disconnect();
+        }
+
+        function printMessage(msg) {
+            // 获取 div 元素
+            var ta = document.getElementById("sse-message");
+            ta.value = ta.value + "\n" + msg;
+        }
+
+    </script>
+
+    <div>
+
+
+
+        <form onsubmit="return false">
+
+            <h3>SSE 客户端</h3>
+
+
+            <input type="text" id="contentUrl" style="width: 675px;" value="http://127.0.0.1:9988/sse/register/A">
+            <button onclick="content();">建立链接</button>
+            <button onclick="closed();">断开链接</button>
+
+            <br><br>
+
+            <table>
+                <tr>
+                    <td>Message</td>
+                </tr>
+                <tr>
+                    <td><textarea id="sse-message" style="width: 1000px;height: 500px;"></textarea></td>
+                </tr>
+                <tr>
+                    <td><input type="button" onclick="javascript:document.getElementById('sse-message').value=''"
+                            value="清空 Response"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+
+</body>
+
+</html>
