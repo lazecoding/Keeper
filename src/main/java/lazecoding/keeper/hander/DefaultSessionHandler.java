@@ -46,7 +46,7 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
             FullHttpRequest request = (FullHttpRequest) msg;
             // 拿到请求地址
             String uri = request.uri();
-
+            String channelId = ChannelUtil.getChannelId(ctx);
             if (!Config.contextPath.equals(uri)) {
                 // 判断是不是我的 WebSocket 请求
                 // 校验 WebSocket Path 后面是否跟着 ？，否则可能出现以 WebSocket Path 前缀的请求进来
@@ -68,9 +68,6 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                     return;
                 }
 
-                String channelId = ChannelUtil.getChannelId(ctx);
-                GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
-
                 // 该 channelId 和哪个 userId 绑定
                 GroupContainer.CHANNEL_USER.put(channelId, userId);
 
@@ -85,6 +82,8 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                 // 重新设置 WebSocket Path
                 request.setUri(Config.contextPath);
             }
+            // 维护所有链接
+            GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
         }
         // 建立请求
         super.channelRead(ctx, msg);
