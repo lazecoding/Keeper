@@ -68,6 +68,9 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                     return;
                 }
 
+                // 维护所有链接
+                GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
+
                 // 该 channelId 和哪个 userId 绑定
                 GroupContainer.CHANNEL_USER.put(channelId, userId);
 
@@ -81,9 +84,11 @@ public class DefaultSessionHandler extends ChannelInboundHandlerAdapter {
                 // 处理参数列表
                 // 重新设置 WebSocket Path
                 request.setUri(Config.contextPath);
+            } else {
+                // 维护所有链接
+                GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
             }
-            // 维护所有链接
-            GroupContainer.CHANNEL_CONTEXT.put(channelId, ctx);
+
         }
         // 建立请求
         super.channelRead(ctx, msg);
