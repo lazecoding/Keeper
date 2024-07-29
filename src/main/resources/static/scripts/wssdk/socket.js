@@ -1,5 +1,5 @@
 /**
- * WebSocket 客户端
+ * WebSocket客户端
  *
  * 构造函数
  * {
@@ -11,7 +11,7 @@
  * }
  * constructor                           构造函数，建立链接
  * WebSocketClient.isActive()            判断链接是否可用
- * WebSocketClient.close()               断开链接
+ * WebSocketClient.close()               断开链接(标志着这个实例链接生命周期结束)
  * WebSocketClient.onMessage(function)   注册消息接收事件处理函数
  * WebSocketClient.onOpen(function)      注册链接建立事件处理函数
  * WebSocketClient.onClose(function)     注册链接关闭事件处理函数
@@ -44,6 +44,37 @@ class WebSocketClient {
     this.openHandlers = []; // 存储所有注册的链接建立处理函数
     this.closeHandlers = []; // 存储所有注册的链接关闭处理函数
     this.errorHandlers = []; // 存储所有注册的链接异常处理函数
+    // 链接断开后行为 (默认重连，控制 reconnectInterval 重连间隔，和上一次重连之间大于 reconnectInterval 则直接重连)
+    this.closeAfter = () => {
+      if (this.reconnecting) return;
+      this.reconnecting = true;
+      // 获取当前时间
+      const nowTimeMs = new Date().getTime();
+      // 获取可以重连的时间
+      const canReconnectTimeMs = this.lastReconnectTime
+        ? this.lastReconnectTime.getTime() + this.reconnectInterval
+        : 0;
+
+      // 如果当前时间大于等于可重连时间，直接重连
+      if (nowTimeMs >= canReconnectTimeMs) {
+        console.log("WebSocket Reconnect Start. time:", new Date());
+        this.lastReconnectTime = new Date();
+        this.init();
+        this.reconnecting = false;
+        console.log("WebSocket Reconnect End. time:", new Date());
+      } else {
+        // 当前时间未到可重连时间，延时重连
+        const reconnectIntervalTime = canReconnectTimeMs - nowTimeMs;
+        setTimeout(() => {
+          console.log("WebSocket Reconnect Start. time:", new Date());
+          this.lastReconnectTime = new Date();
+          this.init();
+          this.reconnecting = false;
+          console.log("WebSocket Reconnect End. time:", new Date());
+        }, reconnectIntervalTime);
+      }
+    };
+    this.uid = this.getUid(); // uid
     this.init(); // 初始化
     console.log(this);
   }
@@ -73,8 +104,9 @@ class WebSocketClient {
       return;
     }
 
+    // ws 链接
     this.ws = new WebSocket(this.url);
-    this.uid = this.getUid();
+
     // 链接建立事件
     this.ws.onopen = (event) => {
       console.log("WebSocket Connection Opened. time:", new Date());
@@ -94,7 +126,7 @@ class WebSocketClient {
       this.doHandlers(event, this.closeHandlers); // 调用注册的处理函数
       this.cancelHeartbeatTask();
       if (!this.reconnecting) {
-        this.reconnect();
+        this.closeAfter();
       }
     };
     // 链接异常事件
@@ -102,39 +134,8 @@ class WebSocketClient {
       console.log("WebSocket Connection Error. time:", new Date());
       this.doHandlers(error, this.openHandlers); // 调用注册的处理函数
       this.cancelHeartbeatTask();
-      this.reconnect();
+      this.closeAfter();
     };
-  }
-
-  // 重连(控制 reconnectInterval 重连间隔，和上一次重连之间大于 reconnectInterval 则直接重连)
-  reconnect() {
-    if (this.reconnecting) return;
-    this.reconnecting = true;
-    // 获取当前时间
-    const nowTimeMs = new Date().getTime();
-    // 获取可以重连的时间
-    const canReconnectTimeMs = this.lastReconnectTime
-      ? this.lastReconnectTime.getTime() + this.reconnectInterval
-      : 0;
-
-    // 如果当前时间大于等于可重连时间，直接重连
-    if (nowTimeMs >= canReconnectTimeMs) {
-      console.log("WebSocket Reconnect Start. time:", new Date());
-      this.lastReconnectTime = new Date();
-      this.init();
-      this.reconnecting = false;
-      console.log("WebSocket Reconnect End. time:", new Date());
-    } else {
-      // 当前时间未到可重连时间，延时重连
-      const reconnectIntervalTime = canReconnectTimeMs - nowTimeMs;
-      setTimeout(() => {
-        console.log("WebSocket Reconnect Start. time:", new Date());
-        this.lastReconnectTime = new Date();
-        this.init();
-        this.reconnecting = false;
-        console.log("WebSocket Reconnect End. time:", new Date());
-      }, reconnectIntervalTime);
-    }
   }
 
   // 关闭链接
@@ -142,8 +143,8 @@ class WebSocketClient {
     //如果浏览器支持WebSocket
     if (window.WebSocket) {
       if (this.ws) {
-        // 断开链接的时候要重写重连方法，避免 onclose 时重连
-        this.reconnect = () => {
+        // 断开链接的时候要重写 closeAfter，避免 onclose 时重连
+        this.closeAfter = () => {
           console.log("WebSocket Real Closed.");
         };
         this.ws.close();
