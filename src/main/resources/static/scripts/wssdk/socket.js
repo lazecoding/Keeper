@@ -86,7 +86,7 @@ class WebSocketClient {
 
   // 链接是否处理活跃状态
   isActive() {
-    return this.ws != undefined && this.ws != null && this.ws.readyState == WebSocket.OPEN;
+    return this.ws && this.ws.readyState == WebSocket.OPEN;
   }
 
   // 初始化 WebSocketClient
@@ -212,7 +212,7 @@ class WebSocketClient {
       this.heartbeatTask = null;
     }
     let taskType = "heartbeat";
-    const url = "task_executor.js";
+    const url = "reactor.js";
     this.heartbeatTask = new Worker(url);
     // 注册 task
     this.heartbeatTask.postMessage({

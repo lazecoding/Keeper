@@ -95,7 +95,7 @@
         });
 
         //连接异常的回调函数
-        wsc.onClose((event) => {
+        wsc.onError((event) => {
           var ta = document.getElementById("responseText");
           ta.value = ta.value + "\n" + "连接异常";
         });
