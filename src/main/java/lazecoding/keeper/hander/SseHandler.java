@@ -2,10 +2,12 @@ package lazecoding.keeper.hander;
 
 import lazecoding.keeper.component.ClientMessageSender;
 import lazecoding.keeper.component.SseContainer;
+import lazecoding.keeper.exception.AccessTokenException;
 import lazecoding.keeper.exception.NilParamException;
 import lazecoding.keeper.model.ClientMessageBean;
 import lazecoding.keeper.model.ResultBean;
 import lazecoding.keeper.model.WebSocketRequest;
+import lazecoding.keeper.util.AccessTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -40,8 +42,12 @@ public class SseHandler {
      */
     @GetMapping(path = "content", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter content() {
-        String userId = "";
+        String accessToken = AccessTokenUtil.getAccessToken();
+        if (!StringUtils.hasText(accessToken)) {
+            throw new AccessTokenException("user token exception");
+        }
         // TODO 通过 token 获取用户
+        String userId = "";
         return SseContainer.registerEmitter(userId);
     }
 
