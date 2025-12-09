@@ -4,11 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import lazecoding.keeper.constant.AppsMqConstants;
 import lazecoding.keeper.model.ClientMessageBean;
+import lazecoding.keeper.model.MessageBody;
 import lazecoding.keeper.model.WebSocketRequest;
+import lazecoding.keeper.service.WebSocketMessagePusher;
 import lazecoding.keeper.util.amqp.AmqpOperator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 请求调度器
@@ -48,13 +54,26 @@ public class DispatchRequestAdapter {
             MessageSender.errorResponse(ctx, "user is nil.");
             return;
         }
-        // 组织请求的更多属性
-        ClientMessageBean clientMessageBean = new ClientMessageBean(app, event, request.getData(), userId);
-        try {
-            ClientMessageSender.sendClientMessage(clientMessageBean);
-            MessageSender.successResponse(ctx, "request send to app.");
-        } catch (Exception e) {
-            MessageSender.errorResponse(ctx, "request send to app exception.");
+        Boolean peerToPeer = request.getPeerToPeer();
+        if (Boolean.TRUE.equals(peerToPeer)) {
+            // 端到端
+            MessageBody messageBody = new MessageBody(app, event, request.getData());
+            boolean isSuccess = WebSocketMessagePusher.send(messageBody, Collections.singletonList(userId));
+            if (isSuccess) {
+                MessageSender.successResponse(ctx, "request send to user.");
+            } else {
+                MessageSender.errorResponse(ctx, "request send to user exception.");
+            }
+        } else {
+            // 端到服务
+            // 组织请求的更多属性
+            ClientMessageBean clientMessageBean = new ClientMessageBean(app, event, request.getData(), userId);
+            try {
+                ClientMessageSender.sendClientMessage(clientMessageBean);
+                MessageSender.successResponse(ctx, "request send to app.");
+            } catch (Exception e) {
+                MessageSender.errorResponse(ctx, "request send to app exception.");
+            }
         }
     }
 }

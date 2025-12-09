@@ -34,6 +34,11 @@ public class WebSocketRequest implements Serializable {
      */
     private Object data;
 
+    /**
+     * 是否端到端
+     */
+    private Boolean peerToPeer = Boolean.FALSE;
+
     public String getApp() {
         return app;
     }
@@ -56,6 +61,14 @@ public class WebSocketRequest implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Boolean getPeerToPeer() {
+        return peerToPeer;
+    }
+
+    public void setPeerToPeer(Boolean peerToPeer) {
+        this.peerToPeer = peerToPeer;
     }
 
     @Override
